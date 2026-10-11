@@ -72,6 +72,7 @@
 ## Mapa de fases
 - `nv-00`=constitución, `nv-01`=foundation/pipeline, `nv-02`=molde DTO→Validator→Service ✅ firmada, `nv-03`=puerta de calidad incremental 🚧 Borrador (advisory, sin bloqueo §7), auth/CRUD van con `nv-04+`.
 - Enmienda constitucional `1.0.0 → 1.0.1` (2026-10-11): §7 puerta advisory nv-03 (delta 80% informativo + Stryker PR sin break, bloqueo real sigue 45%) + §8 orden CI completo (`database/sdd/coverage-merge/delta-check/stryker` incluidos). Sin cambio normativo bloqueante: no requirió alterar gates.
+- Commits 2026-10-11 (sin push/PR): `2f64960` nv-02 + `045ac25` nv-03 + `32ace21` gobernanza. Pre-commit: build 0/0, 59/59 tests, SDD-OK/PASS/OK, `diff --check` limpio.
 
 ## Fase nv-02 ejecutada — Molde DTO→Validator→Service sin endpoints (2026-10-11)
 - Estado: implementado y verde: 59/59 tests (Unit 35 + Integration 13 + Security 7 + Database 2 + Contract 2), build 0/0, cobertura 66.3% ≥45%, critic PASS, endpoints OK 10↔10, `docs/endpoints.md` intacto, `AppDbContext` vacío, semgrep stub local (real en CI). Spec ✅ Aprobada y firmada (Usuario, aceptación expresa en sesión, 2026-10-11).
