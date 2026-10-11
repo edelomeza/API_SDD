@@ -18,12 +18,12 @@ methodology: SDD
 ## 1. Propósito y alcance
 
 - API REST stateless 1-instancia en ASP.NET Core 10 + EF + SQL Server **externo**.
-- Metodología SDD. Toda funcionalidad nace de spec en `/specs` (`NV-00…NV-04`).
+- Metodología SDD. Toda funcionalidad nace de spec en `/specs` (`NV-00…NV-0X`).
 - Objetivo: cada CRUD `spec→migración→DTO→servicio→controller→tests→gates→tag` liberable con `dotnet publish` listo, sin desplegar aún.
 
 ## 2. Principios no negociables
 
-1. **Stateless 1-instancia**: sin sesión en proceso. Persistente en SQL (`SegBloqueo`, refresh). Efímero solo en `IMemoryCache` para `blacklist:{jti} + attempts 2FA` TTL 120s — deuda documentada, se pierde al reciclar.
+1. **Stateless 1-instancia**: sin sesión en proceso. Persistente en SQL (`SegBloqueo`, refresh). Efímero solo en `IMemoryCache` para `blacklist:{jti}` (TTL = vida remanente del token, ver `nv-06`) + `attempts 2FA` TTL 120s — deuda documentada, se pierde al reciclar.
 2. **Seguridad primero**: validar en frontera, denegar por defecto, mínimo privilegio, sin secretos en código/logs/errores.
 3. **Sin estado oculto**: todo compartido en DI; lo estático expone `Reset()` + `lock`.
 4. **Fail-fast**: errores uniformes, health real con check SQL, sin tragar excepciones. `Detail` solo no-prod.
@@ -86,7 +86,7 @@ No nuevas librerías sin evaluar licencia/mantenimiento/seguridad. Regla de exce
 ## 8. CI y release manual
 
 - CI-PR orden: `restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage-merge → coverage → delta-check → stryker → semgrep`, `--no-build` Release.
-- Sin CD. Release manual: `dotnet publish -c Release -o ./publish` + set `env ConnectionStrings__Default, Jwt__Key/Issuer/Audience, DataProtection__KeysPath` + `curl /health/ready + login + 401 + headers` + tag `vX.Y.Z-crudN`.
+- Sin CD. Release manual: `dotnet publish -c Release -o ./publish` + set `env ConnectionStrings__Default, Jwt__Key/Issuer/Audience, DataProtection__KeysPath` + `curl /health/ready + login + 401 + headers` + tag `vX.Y.Z-(crud|auth)N` (`crudN` entidades, `authN` slices auth).
 - `CHECKLIST_PR.md` obligatorio. 1 revisor. `main` protegida.
 - YAML validado `yaml.safe_load`. `Stryker` deja mutantes — siempre `dotnet build` después.
 

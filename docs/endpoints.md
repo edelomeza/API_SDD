@@ -1,7 +1,7 @@
 # Endpoints — vivo (nv-01)
 
 > Fuente contratos. Los specs solo enlazan, no duplican. Constitución §6.
-> Filas login/2FA/CRUD vuelven en `nv-02` con su spec.
+> Filas CRUD en `nv-04`, login en `nv-05`, logout en `nv-06` (refresh/2FA en `nv-07`).
 
 | Método | Ruta | Auth | Rate | Códigos | Spec |
 |---|---|---|---|---|---|

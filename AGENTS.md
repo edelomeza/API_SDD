@@ -13,7 +13,7 @@
 - Sin secretos, sin TODO sin issue, sin usings muertos, sin código muerto.
 
 ## 2. Memoria
-- Plantilla canónica `.specify/templates/spec-template.md` (alias `specs/_template.md`), DoD por CRUD en `NV-04`.
+- Plantilla canónica `.specify/templates/spec-template.md` (alias `specs/_template.md`), DoD por CRUD/auth en `nv-04…nv-06`.
 - `AGENTS.md`: manual operativo vivo.
 - `Memoria.md`: estado, decisiones, lecciones aprendidas por fase y metodología de diagnóstico de chaos. Actualizar al cerrar cada fase.
 - Al empezar, lee `Memoria.md` para conocer el estado del proyecto y las decisiones tomadas.
@@ -46,9 +46,9 @@
 ## 5. Convenciones técnicas
 - Rutas `api/v{version}/[controller]`; DTOs + FluentValidation; `RowVersion base64` en Update/Delete.
 - Health `/health,/health/ready`; `/scalar` solo Dev. Sin `health-ui/metrics` full.
-- Keys IMemory solo `blacklist:{jti},attempts:{user},lockout:{user}` 2FA/blacklist TTL 120s. Password nunca en caché.
+- Keys IMemory solo `blacklist:{jti}` (TTL = vida remanente, `nv-06`), `attempts:{user},lockout:{user}` 2FA TTL 120s. Password nunca en caché.
 - Migrations: `dotnet ef migrations add --project API_SDD`.
-- Auth primero `NV-04` da `AdminPolicy`; demás CRUDs la reutilizan. 2FA TOTP `Otp.NET ±1 + DataProtection` desde CRUD1.
+- Auth `nv-05` da `AdminPolicy`; `nv-04` y demás CRUDs la consumen. 2FA TOTP `Otp.NET ±1 + DataProtection` desde CRUD1.
 - Molde nv-02: `Common/PagedResult<T>` + validators espejo auto-registrados por reflexión (`ValidatorRegistration`, sin paquete DI extra); `Dtos/PaginationQuery` demo sin entidad.
 
 ## 6. Seguridad DevSecOps

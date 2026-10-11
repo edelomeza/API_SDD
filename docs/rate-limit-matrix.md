@@ -4,10 +4,10 @@
 
 | Política | Límite | Ventana | Ámbito | Spec |
 |---|---|---|---|---|
-| Global | 1000 | 1 min | todo | NV-02 |
-| Login | 5 | 5 min | `POST login` | NV-01 |
-| Login2faVerify | 10 | 5 min | `POST login/2fa-verify` | NV-01 |
-| Admin | 200 | 1 min | endpoints admin | NV-02 |
-| ConcurrentWrites | 10 | concurrente | POST/PUT/DELETE | NV-02 |
+| Global | 1000 | 1 min | todo | nv-01 (reusada nv-04…nv-06) |
+| Login | 5 | 5 min | `POST login` | nv-05 |
+| Login2faVerify | 10 | 5 min | `POST login/2fa-verify` | nv-07 (reservado) |
+| Admin | 200 | 1 min | endpoints admin | nv-04 (definida nv-05) |
+| ConcurrentWrites | 10 | concurrente | POST/PUT/DELETE | nv-04 |
 
 429 uniforme con `Retry-After`. Medir antes de fijar timeouts (principio empírico §2.5).
