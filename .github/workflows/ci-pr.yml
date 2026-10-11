@@ -9,13 +9,16 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # NV-03: historial completo para el delta (merge-base) y Stryker since:main.
+          fetch-depth: 0
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12
-      # Orden §8: restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage → semgrep
+      # Orden §8: restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage → delta-check → stryker → semgrep
       - name: restore
         run: dotnet restore
       - name: build
@@ -58,5 +61,14 @@ jobs:
           Get-Content coverage.txt
       - name: coverage
         run: python scripts/check_coverage.py --min 45
+      - name: delta-check
+        # NV-03 advisory: informa el 80% del delta, no bloquea (bloqueo real: 45% global).
+        run: python scripts/check_delta_coverage.py --min 80 --advisory
+      - name: stryker
+        # NV-03 advisory: Stryker incremental (since:main) sin break; nunca bloquea el PR.
+        run: |
+          dotnet tool install dotnet-stryker --version 5.0.0 --tool-path .tools/stryker
+          ./.tools/stryker/dotnet-stryker --config-file stryker-config.json
+        continue-on-error: true
       - name: semgrep
         uses: returntocorp/semgrep-action@v1
