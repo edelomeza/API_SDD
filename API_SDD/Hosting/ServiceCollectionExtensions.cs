@@ -3,6 +3,7 @@ using System.Text;
 using ApiSDD.Common;
 using ApiSDD.Data;
 using ApiSDD.Health;
+using ApiSDD.Validators;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
@@ -33,6 +34,7 @@ internal static class ServiceCollectionExtensions
         services.AddOpenApi();
         services.AddHttpContextAccessor();
         services.AddMemoryCache();
+        services.AddValidatorsFromAssembly(AssemblyMarker.Value);
 
         services.AddApiVersioning(o =>
         {
