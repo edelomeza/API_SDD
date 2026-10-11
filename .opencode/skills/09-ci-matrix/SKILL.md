@@ -9,10 +9,10 @@ metadata:
 # 09-ci-matrix MVP (lite)
 
 ## Incluye
-- `restore→build→unit→integration→security→critic→endpoints→contract→semgrep, timeouts 5/15/30min, --no-build`.
+- `restore→build→unit→integration→security→database→contract→critic→endpoints→sdd→coverage-merge→coverage→delta-check→stryker→semgrep, timeouts 5/15/30min, --no-build`.
 
 ## Excluye
-- mutation/perf/chaos/database nightly, deploy AWS.
+- Stryker bloqueante, perf/chaos, deploy AWS. (Stryker corre PR-advisory `since:main` + nightly.)
 > Nota: suite `Database` sí es obligatoria por CRUD (constitución §7); lo excluido es solo el *nightly*, no la suite.
 
 ## Verify

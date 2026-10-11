@@ -20,13 +20,13 @@ permission:
 - Fase B: slice completo liberable `spec→migración→DTO→servicio→controller→tests→gates→tag`.
 
 ## Cuándo
-- Desde `nv-02` en adelante: 1 vez por cada CRUD (nv-02 auth primero [= NV-03 madre], luego cada CRUD). Para `nv-00/nv-01` (sin CRUD) el dueño es `@foundation-builder`, no tú. Después de ti corre `@security-reviewer`, luego `@traceability-clerk`.
+- Desde `nv-04` en adelante: 1 vez por cada CRUD (nv-04 auth primero, luego cada CRUD). `nv-00/nv-01` son de `@foundation-builder`; `nv-02` (molde) y `nv-03` (puerta) ya existen y los reutilizas, no los recreas. Después de ti corre `@security-reviewer`, luego `@traceability-clerk`.
 
 ## Recorte
 Sí:
 - Variante base entidad→DTO→validator→service→controller→tests + test que aserta cada diferido.
-- `dotnet build -c Release --no-restore` 0/0 antes de test; suites `Unit/Integration/Security/Contract/Database --no-build`.
-- Rutas `api/v{version}/[controller]`, DTOs + FluentValidation, `RowVersion base64` en Update/Delete, `PagedResult{Items,TotalCount,Page,PageSize}`.
+- `dotnet build -c Release --no-restore` 0/0 antes de test; suites `Unit/Integration/Security/Contract/Database --no-build` + `critic + endpoints + coverage ≥45%` + puerta advisory nv-03 (`delta-check` informativo, Stryker `since:main` sin break).
+- Rutas `api/v{version}/[controller]`, DTOs + FluentValidation (validators espejo vía `ValidatorRegistration` existente), `RowVersion base64` en Update/Delete, `PagedResult<T>` (ya en `Common/`).
 - Pipeline §4 constitución: `SecurityHeaders outermost → ExceptionHandling → ForwardedHeaders → HSTS no-Dev → HttpsRedirection → CORS 1 origen → UseRateLimiter antes Auth → Auth → AuthZ → Controllers`.
 - Proyecto real `API_SDD/API_SDD.csproj`; migraciones `dotnet ef migrations add --project API_SDD` sin `_` (CA1707).
 
@@ -52,6 +52,7 @@ Tus diferidos a asertar (con test):
 - 04-security-core
 - 04-totp-provisioning
 - 10-testing-strategy
+- testing-mutation
 - 02-test-data
 - 02-domain-data
 - empirical-verification

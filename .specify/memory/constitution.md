@@ -1,7 +1,7 @@
 ---
-version: 1.0.0
+version: 1.0.1
 ratified: 2026-10-10
-last_amended: 2026-10-10
+last_amended: 2026-10-11
 status: active
 source_of_truth: .specify/memory/constitution.md
 mirror: ./constitution.md
@@ -80,11 +80,12 @@ No nuevas librerías sin evaluar licencia/mantenimiento/seguridad. Regla de exce
 - Suites: `Unit, Integration SQL real, Security, Database, Contract captura`. Sin `Mutation/Performance/Chaos` obligatorios — `Stryker ≥80%` y `FsCheck .Trim()` van nightly/opcional, no bloquean release.
 - `ContractTest/Fixtures` captura real `CONTRACT_CAPTURE=1`, `IsConventional`, `RowVersion AQ==`, `xunit.runner.json` serie en Contract.
 - Cobertura `≥45% python scripts/check_coverage.py`. Gate real futuro es mutation, hoy no bloquea.
+- Puerta incremental advisory nv-03 (no bloquea): `check_delta_coverage.py --min 80 --advisory` sobre el delta (`merge-base main`, higiene `Migrations/*`, `Program.cs`, `Dtos/*`) + Stryker PR `since:main` (`thresholds.break=0`, `continue-on-error`).
 - `Testcontainers.MsSql WithPortBinding(puertoFijo,1433)`. `/provider-states` gateado `EnableProviderStates+no-prod`.
 
 ## 8. CI y release manual
 
-- CI-PR orden: `restore → build → unit → integration → security → critic → endpoints → contract → semgrep`, `--no-build` Release.
+- CI-PR orden: `restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage-merge → coverage → delta-check → stryker → semgrep`, `--no-build` Release.
 - Sin CD. Release manual: `dotnet publish -c Release -o ./publish` + set `env ConnectionStrings__Default, Jwt__Key/Issuer/Audience, DataProtection__KeysPath` + `curl /health/ready + login + 401 + headers` + tag `vX.Y.Z-crudN`.
 - `CHECKLIST_PR.md` obligatorio. 1 revisor. `main` protegida.
 - YAML validado `yaml.safe_load`. `Stryker` deja mutantes — siempre `dotnet build` después.

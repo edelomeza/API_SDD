@@ -7,7 +7,7 @@
 > Stack: ver `constitution.md §3`. Nada fuera sin excepción documentada.
 - Setup: `API_SDD/appsettings.Example.json → API_SDD/appsettings.json`; `ConnectionStrings__Default` apunta a **DB externa**; `UseInMemoryDatabase=false`; `dotnet restore`; Docker solo para tests.
 - Comandos: `dotnet restore`, `dotnet build -c Release --no-restore`, `dotnet test <csproj> -c Release --no-build` (Unit, Integration, Security, Contract, Database), `dotnet run --project API_SDD/API_SDD.csproj`, `dotnet publish -c Release -o ./publish`.
-- CI `ci-pr.yml`: restore → build → unit → integration → security → critic → endpoints → contract → semgrep. Sin deploy.
+- CI `ci-pr.yml`: restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage → delta-check → stryker → semgrep. Sin deploy.
 - PR = 1 slice CRUD; `CHECKLIST_PR.md` + 1 revisor + `Memoria.md` al día.
 - Naming: inglés código; DB `Prefijo* + str/int/dec/dte/bln`; JSON legacy medido, NO PascalCase puro.
 - Sin secretos, sin TODO sin issue, sin usings muertos, sin código muerto.
@@ -38,8 +38,8 @@
 ## 4. Verificación por CRUD
 - `build Release 0/0` antes de test.
 - `Unit/Integration/Security/Contract/Database --no-build` 100% verdes.
-- `critic-guardrails.ps1 → PASS`, `check_endpoints.ps1 → OK`, `check_coverage.py ≥45%`, `semgrep scan --config=auto --config=.semgrep/semgrep.yaml --error` 0 nuevos.
-- `Stryker` solo nightly opcional; tras él siempre `build` antes de `--no-build`.
+- `critic-guardrails.ps1 → PASS`, `check_endpoints.ps1 → OK`, `check_coverage.py ≥45%`, `check_delta_coverage.py --min 80 --advisory` informa el delta (no bloquea), `semgrep scan --config=auto --config=.semgrep/semgrep.yaml --error` 0 nuevos.
+- `Stryker` PR advisory (`since:main`, `break:0`, `continue-on-error`) + solo nightly opcional; tras él siempre `build` antes de `--no-build`.
 - Contract `CONTRACT_CAPTURE=1` para regenerar, sin var solo valida.
 - `curl /health/ready` 200 con DB externa, 503 si cae.
 
@@ -48,7 +48,8 @@
 - Health `/health,/health/ready`; `/scalar` solo Dev. Sin `health-ui/metrics` full.
 - Keys IMemory solo `blacklist:{jti},attempts:{user},lockout:{user}` 2FA/blacklist TTL 120s. Password nunca en caché.
 - Migrations: `dotnet ef migrations add --project API_SDD`.
-- Auth primero `NV-03` da `AdminPolicy`; demás CRUDs la reutilizan. 2FA TOTP `Otp.NET ±1 + DataProtection` desde CRUD1.
+- Auth primero `NV-04` da `AdminPolicy`; demás CRUDs la reutilizan. 2FA TOTP `Otp.NET ±1 + DataProtection` desde CRUD1.
+- Molde nv-02: `Common/PagedResult<T>` + validators espejo auto-registrados por reflexión (`ValidatorRegistration`, sin paquete DI extra); `Dtos/PaginationQuery` demo sin entidad.
 
 ## 6. Seguridad DevSecOps
 - JWT HS256 real `UseJwtBearer=true` siempre (sin flag legacy), `OnTokenValidated` blacklist.
@@ -76,7 +77,7 @@
 - Fuente: `Memoria.md`. Si se vuelve regla, mover a AGENTS.md.
 
 ## 11. Sub-agentes
-- `slice-scaffolder` real-first sin Fase fake; `security-reviewer` gate sin editar; `traceability-clerk` reporta drift no edita.
+- `slice-scaffolder` real-first sin Fase fake; `security-reviewer` gate sin editar; `traceability-clerk` reporta drift no edita; `readme-keeper` edita solo `**/*.md` (`bash: deny`).
 - En CI solo `critic` ligero bloqueantes 1-4.
 
 ## Solution structure
@@ -89,5 +90,6 @@
 | `DatabaseTest` | `DatabaseTest/` | Testcontainers migraciones/seed |
 | `ContractTest` | `ContractTest/` | captura + convención |
 | `deploy/` | `deploy/` | compose local SQL opcional (futuro, ver `deploy/README.md`) |
-| `scripts/` | `scripts/` | critic, endpoints, coverage |
+| `scripts/` | `scripts/` | critic, endpoints, coverage, delta |
+| `stryker-config.json` | `./` | Stryker advisory nv-03 (`since:main`, sin break) |
 | `docs/` | `docs/` | endpoints, rate-matrix, asvs |

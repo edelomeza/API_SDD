@@ -68,3 +68,31 @@
 - Decisión: crear stubs `API_SDD/appsettings.Example.json`, `scripts/critic-guardrails.ps1 → PASS`, `scripts/check_endpoints.ps1 → OK`, `.semgrep/semgrep.yaml`, `specs/_template.md` alias, `deploy/README.md`. Porqué: AGENTS §4 los exige como gates, pero NV-03/NV-04 aún no los cablean; stubs permiten `Test-Path` verde sin verde falso.
 - Deuda: cablear critic real bloqueantes 1-4, check_endpoints contra `/health/ready`, reglas semgrep propias. `IMemoryCache` TTL 120s sigue vigente.
 - A evitar: hardcodear connection strings/keys; `TokenBlacklist` estático sin `Reset()`; `Invoke-WebRequest` sin `-UseBasicParsing` en PS5.1; TODO sin issue.
+
+## Mapa de fases
+- `nv-00`=constitución, `nv-01`=foundation/pipeline, `nv-02`=molde DTO→Validator→Service ✅ firmada, `nv-03`=puerta de calidad incremental 🚧 Borrador (advisory, sin bloqueo §7), auth/CRUD van con `nv-04+`.
+- Enmienda constitucional `1.0.0 → 1.0.1` (2026-10-11): §7 puerta advisory nv-03 (delta 80% informativo + Stryker PR sin break, bloqueo real sigue 45%) + §8 orden CI completo (`database/sdd/coverage-merge/delta-check/stryker` incluidos). Sin cambio normativo bloqueante: no requirió alterar gates.
+
+## Fase nv-02 ejecutada — Molde DTO→Validator→Service sin endpoints (2026-10-11)
+- Estado: implementado y verde: 59/59 tests (Unit 35 + Integration 13 + Security 7 + Database 2 + Contract 2), build 0/0, cobertura 66.3% ≥45%, critic PASS, endpoints OK 10↔10, `docs/endpoints.md` intacto, `AppDbContext` vacío, semgrep stub local (real en CI). Spec ✅ Aprobada y firmada (Usuario, aceptación expresa en sesión, 2026-10-11).
+- Archivos: `Common/PagedResult.cs`, `Dtos/PaginationQuery.cs` (DTO demo sin entidad), `Services/IService.cs` marker, `Validators/AssemblyMarker.cs (.Value) + ValidatorRegistration.cs + PaginationQueryValidator.cs`, `UnitTest/Architecture/VerticalSliceConventionTests.cs (5)`; DI +1 línea `AddValidatorsFromAssembly(AssemblyMarker.Value)` sin reordenar; comentario `AppDbContext` actualizado (entidades llegan con nv-04+).
+- Decisiones: registro por reflexión con FluentValidation core (sin paquete `DependencyInjectionExtensions`). Porqué: constitution §3 prohíbe librerías nuevas sin evaluar; ~30 líneas bastan. Exclusión `IsNested + CompilerGenerated` en registro y test. Porqué: lambdas/iteradores generan `<>c/<>d__` que rompían el escaneo (fallo real `ValidatorsEspejoDeDto`). `AssemblyMarker` con propiedad `.Value`. Porqué: Sonar S2094 prohíbe clase vacía. Retorno `string[]` en `ControllerSources`. Porqué: CA1859. Falta `this` en extensión detectado por CS1061 en primer build.
+- A evitar: palabra `todo` en `*.cs` aunque sea español (`todo validator` tumbó `critic B1`, Select-String insensible a mayúsculas); `python3` local es stub de Store — cobertura verificada vía `coverage.txt` 66.3% con la misma fusión del CI.
+
+## Fase nv-03 ejecutada T2 — Puerta incremental implementada + piloto (2026-10-11)
+- Estado: implementados `scripts/check_delta_coverage.py`, `stryker-config.json`, `ExcludeByFile` en runsettings, jobs `delta-check + stryker` en `ci-pr.yml` (advisory, `continue-on-error`, `fetch-depth: 0`). Piloto slice nv-02: delta 108/112 = 96.43% advisory OK; Stryker 5.0.0 Standard 23 mutantes en ~3min, score 45.83% (bloqueo al 80% hoy fallaría: advisory correcto); global 66.3% → 66.8% ≥45%. Gates: sdd-lint SDD-OK, critic PASS, endpoints OK, build 0/0, 59/59 tests. Spec ✅ Aprobada y firmada (Usuario, aceptación expresa en sesión, 2026-10-11).
+- Decisiones: Stryker.NET 5.0.0 evaluado §3 (Apache-2.0, org stryker-mutator activa, pin CI 5.0.0, `thresholds.break=0` + job `continue-on-error` = advisory real); métrica delta con unión OR por línea entre suites (evita doble conteo); match bidireccional de rutas (coverlet emite relativas al proyecto); delta incluye worktree (en CI el árbol está limpio); sin clave `output` en config (v5 la rechaza, default `StrykerOutput/` ya ignorado). `dotnet build` restaurativo tras Stryker verificado sin mutantes residuales.
+- A evitar: script python sin intérprete local (Store stub) — lógica validada por réplica pwsh + revisión; medirá real en CI con python 3.12. No subir umbrales sin piloto medido.
+
+## Fase skills — 5 actualizadas vs nv-02/nv-03 (2026-10-11)
+- Estado: `03-auth-endpoints` (numeración `nv-04+`, `AdminPolicy` madre auth), `09-ci-matrix` (orden CI completo + Stryker PR-advisory/nightly), `testing-mutation` (advisory + nightly + piloto 45.83%), `03-api-vertical-slice` (registro por reflexión sin paquete DI + `PagedResult<T>`), `10-testing-strategy` (puerta delta advisory). 30 restantes verificadas sin cambios. Gates: sdd-lint SDD-OK, critic PASS, endpoints OK.
+- A evitar: crear skills nuevas por cada puerta (extender antes que proliferar); referencias `nv-0X` duras en skills (revisar mapa al mover fases).
+
+## Fase agentes — 4 actualizados, 0 creados (2026-10-11)
+- Estado: `foundation-builder` (jubilado tras nv-01; nv-02/nv-03 directos sin CRUD), `slice-scaffolder` (desde nv-04, reutiliza molde+puerta, enlaza `testing-mutation`), `security-reviewer` (auth `nv-04+`, Stryker no lo ejecuta), `traceability-clerk` (evidencia nv-02/nv-03).
+- A evitar: dueños por puerta (burocracia contra AGENTS §11: en CI solo critic ligero).
+
+## Fase readme-keeper — sub-agente solo-`.md` (2026-10-11)
+- Estado: creado `.opencode/agents/readme-keeper.md` (`mode:subagent`, `edit: **/*.md allow/* deny`, `bash:deny`); corre tras `@traceability-clerk`, antes de la firma. Integrado en `AGENTS.md §11` (5.º agente) y tabla `README.md` (+ fila, `scaffolder nv-04+`, `specs/ nv-00…nv-03`, `scripts/ +delta`).
+- Decisión: permiso por patrón (última regla gana) según skill `customize-opencode`; fallback documentado (mandato en cuerpo si la versión no soporta patrones). Porqué: el README estaba huérfano (ningún agente/skill/gate lo tocaba).
+- A evitar: darle `bash` o `edit` plano (rompe el confinamiento); firmarle aprobaciones (no firma, como el clerk).

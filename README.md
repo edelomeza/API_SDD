@@ -44,9 +44,10 @@ No new libraries without license / maintenance / security evaluation (exception 
 | Agent | Permissions | Job |
 |---|---|---|
 | `@foundation-builder` | `edit: allow, bash: allow` | Owns `nv-00 → nv-01` (no CRUD): props/config, pipeline, middlewares, `Ping/Probe`, health, base tests. Retires after `nv-01`. |
-| `@slice-scaffolder` | `edit: allow, bash: allow` | Owns `nv-02+` (auth first, then each CRUD): compilable skeleton (Phase A) + full slice (Phase B), real-first JWT/Argon2id/TOTP. |
+| `@slice-scaffolder` | `edit: allow, bash: allow` | Owns `nv-04+` (auth first, then each CRUD): compilable skeleton (Phase A) + full slice (Phase B), real-first JWT/Argon2id/TOTP. Reuses `nv-02` mold + `nv-03` gate. |
 | `@security-reviewer` | `edit: deny` | Phase-matrix audit before each tag (foundation mode skips future auth FAILs). Table `PASS/FAIL`, blocks tag. |
 | `@traceability-clerk` | `edit: deny` | Drift reporter `spec ↔ code ↔ test` before signing Draft-with-evidence. Never edits. |
+| `@readme-keeper` | `edit: **/*.md allow, * deny; bash: deny` | Keeps `.md` living (README, docs, specs): CI order, counts, links. Never touches code. |
 
 Skills are linked, not copied (e.g. `00-constitution`, `01-foundation`, `04-security-core`, `critic-guardrails`, `drift-guards`); all 35 load on demand via the `skill` tool and most are also `/slash` commands.
 
@@ -59,16 +60,16 @@ IntegrationTest/    WAF + Testcontainers
 SecurityTest/       WAF
 DatabaseTest/       Testcontainers migrations/seed
 ContractTest/       capture + convention (Fixtures)
-specs/              nv-00, nv-01 (spec/plan/task)
+specs/              nv-00…nv-03 (spec/plan/task + checklists)
 docs/               endpoints, rate-matrix, asvs (living)
-scripts/            critic, endpoints, coverage
+scripts/            critic, endpoints, coverage, delta
 deploy/             optional local SQL compose (future)
 .github/workflows/  ci-pr.yml only
 .opencode/          agents + skills
 .specify/           memory (constitution) + templates
 ```
 
-Legacy `Chaos/Performance/Mutation` suites were removed (empty templates, out of scope); Stryker stays nightly-only, NBomber/Chaos deferred per constitution.
+Legacy `Chaos/Performance/Mutation` suites were removed (empty templates, out of scope); Stryker runs PR-advisory (`since:main`, non-blocking) plus nightly-only, NBomber/Chaos deferred per constitution.
 
 ## Quickstart
 
@@ -99,10 +100,11 @@ Docker is for tests only (Testcontainers).
 | `powershell -File scripts/critic-guardrails.ps1` → `PASS` | 4 blocking guardrails (secrets, tokens in logs, pipeline, endpoints) |
 | `powershell -File scripts/check_endpoints.ps1` → `OK` | Living docs match routes |
 | `python scripts/check_coverage.py --min 45` | Coverage ≥ 45% |
+| `python scripts/check_delta_coverage.py --min 80 --advisory` | Delta vs main ≥ 80% informativo (no bloquea) |
 | `semgrep scan --config=auto --config=.semgrep/semgrep.yaml --error` | 0 new findings |
 | `CONTRACT_CAPTURE=1 dotnet test ContractTest` | Regenerate captures (without the var: validate only) |
 
-CI order (`ci-pr.yml`): `restore → build → unit → integration → security → critic → endpoints → contract → semgrep`. Stryker is nightly-only; always `dotnet build` after it.
+CI order (`ci-pr.yml`): `restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage-merge → coverage → delta-check → stryker → semgrep`. Stryker PR advisory (`since:main`, `break:0`) + nightly-only; always `dotnet build` after it.
 
 ## API contracts (links, not copies)
 

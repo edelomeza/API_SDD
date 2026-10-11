@@ -23,7 +23,7 @@ permission:
 
 ## Matriz por fase (no todo aplica siempre)
 - En `nv-00`: solo `Example.json` sin secretos + `S1135/CA1707 + TreatWarningsAsErrors + NuGetAudit` + `critic B1/B2` + `AppSettingsTests 3`. Auth diferido, FAIL de auth aquí es falso positivo.
-- En `nv-01`: pipeline orden + headers/CSP nonce/HSTS + `health/ready` + CORS 1 origen + `KeysPath` + `Kestrel 10MB/2min` + rates configurados (sin usuarios) + `semgrep 0`. Emisión JWT, lockout, TOTP y `AdminPolicy` usada son `nv-02+`; no fallarlos en vacío.
+- En `nv-01`: pipeline orden + headers/CSP nonce/HSTS + `health/ready` + CORS 1 origen + `KeysPath` + `Kestrel 10MB/2min` + rates configurados (sin usuarios) + `semgrep 0`. Emisión JWT, lockout, TOTP y `AdminPolicy` usada son `nv-04+`; no fallarlos en vacío (`nv-00→nv-03`).
 
 ## Recorte
 Sí — checks 04:
@@ -51,4 +51,4 @@ No — checks 06 desactivados, si los ves es falso positivo:
 - powershell-quirks
 
 ## Salida
-- Tabla `PASS/FAIL` por check + archivos:líneas. `FAIL` bloquea tag. Sin Stryker (solo nightly opcional). No tocas `Memoria.md`.
+- Tabla `PASS/FAIL` por check + archivos:líneas. `FAIL` bloquea tag. Sin Stryker (PR advisory informativo + nightly opcional; tú no lo ejecutas). No tocas `Memoria.md`.

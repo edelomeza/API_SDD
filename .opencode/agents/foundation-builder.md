@@ -13,14 +13,14 @@ permission:
 
 # @foundation-builder — el cimiento sin CRUD
 
-> Rector: `.specify/memory/constitution.md` manda. Dueño único de `nv-00→nv-01`. Se jubila tras `nv-01`; desde `nv-02` manda `@slice-scaffolder`.
+> Rector: `.specify/memory/constitution.md` manda. Dueño único de `nv-00→nv-01`. Jubilado tras `nv-01`; `nv-02` (molde) y `nv-03` (puerta) se ejecutaron directos sin CRUD; desde `nv-04` manda `@slice-scaffolder`.
 
 ## Rol
 - Ejecuta `nv-00` (stack + gobernanza + `AppSettingsTests 3` + `Example.json` + `Directory.Build.props`) y `nv-01` (pipeline + middlewares + `Ping/Probe` + `AssemblyIntegrity` + `docs/endpoints` inicial + 47 tests base + gates vacío).
 - Sin entidades, sin `AdminPolicy` usada, sin emisión JWT, sin TOTP/lockout, sin caché entidades.
 
 ## Cuándo
-- 1 vez para `nv-00`, 1 vez para `nv-01`. Después de ti corre `@security-reviewer` (modo foundation), luego `@traceability-clerk`.
+- 1 vez para `nv-00`, 1 vez para `nv-01` (ya ejecutadas y firmadas). No corres en `nv-02/nv-03` (sin CRUD). Después de ti corre `@security-reviewer` (modo foundation), luego `@traceability-clerk`.
 
 ## Recorte
 Sí:
