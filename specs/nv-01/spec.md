@@ -44,7 +44,7 @@ Casa vacía pero con luz. Base ejecutable una sola vez, ya en forma prod, sin CR
 Sin entidades, sin `AdminPolicy` usada, sin Redis/SQS/OTel/health-ui/metrics full. JWT configurado pero sin emisión — la emisión es `NV-03`. Sin hosting — `dotnet publish` listo no desplegado.
 
 ## Aprobación y Control de Cambios
-- **Estado:** 🚧 Borrador
-- **Revisores:** —
-- **Fecha:** —
-- **Detalle:** pendiente firma. Sin esto cada CRUD repite pipeline y errores.
+- **Estado:** ✅ Aprobada
+- **Revisores:** Usuario (aceptación expresa en sesión)
+- **Fecha:** 2026-10-11
+- **Detalle:** implementada y verificada (54/54 tests, build 0/0, cobertura 66.32%, critic/endpoints/sdd OK). Evidencia en `specs/nv-01/checklists/gates.md` + `Memoria.md` fase Fase-1.

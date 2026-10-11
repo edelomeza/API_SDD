@@ -12,4 +12,4 @@
 - [x] `Directory.Build.props`: All + TreatWarningsAsErrors + NuGetAudit + SonarAnalyzer
 - [x] `UnitTest/Common/AppSettingsTests.cs (3)` verdes
 - [x] `critic-guardrails.ps1 → PASS` en vacío
-- [ ] Aprobación firmada (revisor + fecha) — pendiente firma
+- [x] Aprobación firmada: Usuario (aceptación expresa), 2026-10-11

@@ -11,4 +11,4 @@
 - [x] Tests 47: Unit DI 3 + Middleware 10 + Errors 14, Integration Routing 3 + Health 2 + Errors 8, Security Integrity 4 + Headers 3
 - [x] Gates: build 0/0 + Unit/Security/Integration 100% + critic PASS + endpoints OK + semgrep 0 + /ready 200/503
 - [x] `docs/endpoints.md` reescrito a nv-01 (login/CRUD vuelven en nv-02)
-- [ ] Aprobación firmada (revisor + fecha) — pendiente firma
+- [x] Aprobación firmada: Usuario (aceptación expresa), 2026-10-11

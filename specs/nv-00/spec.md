@@ -41,7 +41,7 @@ N/A — verificación manual de estructura + `AppSettingsTests 3`: `Example vál
 Sin `p95, mutation gate, ZAP/RESTler bloqueantes, Trivy imagen, /metrics full, Pact real` — van como deuda documentada, no verde falso. Sin saga, sin Redis, sin hosting.
 
 ## Aprobación y Control de Cambios
-- **Estado:** 🚧 Borrador
-- **Revisores:** —
-- **Fecha:** —
-- **Detalle:** pendiente firma. Sin esto cada paso posterior improvisa.
+- **Estado:** ✅ Aprobada
+- **Revisores:** Usuario (aceptación expresa en sesión)
+- **Fecha:** 2026-10-11
+- **Detalle:** implementada y verificada (AppSettingsTests 3/3, build 0/0, critic PASS). Evidencia en `specs/nv-00/checklists/gates.md` + `Memoria.md` fase Fase-1.

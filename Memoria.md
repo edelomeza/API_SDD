@@ -22,8 +22,12 @@
 - Estado: integrados `nv-00/plan.md + task.md` y `nv-01/plan.md + task.md` verbatim usuario. `specs/` = 6 archivos.
 - Deuda al crear: `@foundation-builder` (AppSettingsTests 3, middlewares, ping/probe, health/ready, docs/endpoints inicial) — EJECUTADA en fase Fase-1 (abajo).
 
+## Fase firma nv-00/nv-01 (2026-10-11)
+- Estado: ambas specs ✅ Aprobadas y firmadas (Usuario, aceptación expresa en sesión). Checklists tildadas. Base cerrada; `nv-02` queda desbloqueado cuando lo autorices (hoy congelado por restricción solo-base).
+- Nota: firma nominal del revisor pendiente de formalizar si exiges nombre propio en el futuro.
+
 ## Fase Fase-1 ejecutada — nv-00/nv-01 en verde (2026-10-11)
-- Estado: 54/54 tests (Unit 30 + Integration 13 + Security 7 + Database 2 + Contract 2), build 0/0 en 6 proyectos, cobertura 66.32% ≥45%, critic PASS, endpoints OK, sdd-lint OK, semgrep pendiente CI (sin CLI local). Specs a Borrador con evidencia.
+- Estado: 54/54 tests (Unit 30 + Integration 13 + Security 7 + Database 2 + Contract 2), build 0/0 en 6 proyectos, cobertura 66.32% ≥45%, critic PASS, endpoints OK, sdd-lint OK, semgrep pendiente CI (sin CLI local). Specs ✅ Aprobadas y firmadas (ver fase firma).
 - Decisiones: EF completo ya (DbContext vacío válido, sin entidades); `AssemblyName APISDD` (CA1707 assembly, proyecto sigue `API_SDD/`); `internal` + IVT(UnitTest,SecurityTest) con 11 supresiones por tipo (CA1515/CA1031/CA1032-base/S5332; namespace-scope no aplica en toolchain); `ApiExplorer` fuera (AV0029/AV0030 insatisfacibles en 10.2.1, doc único v1); `TimeoutRejectedException` no existe en ASP.NET → OCE→408; `RollingInterval` vive en `Serilog` root en Sinks.File 7; FA 7.2.2 (evita licencia FA8); `ConfigureAwait(true)` en tests (xUnit1030 vs CA2007); `TestHttp` helper (CA2234); FsCheck vía `Fluent.Gen` + `Property` incompatible con runner v2 (convirtiendo a Fact determinista); `coverlet.runsettings` acota a `[APISDD]*`; `slnx` con 6 proyectos (los `--no-build` corrían rancios); `sdd-lint` + `check_sdd.ps1` + steps critic/endpoints reales en CI.
 - Deuda: Database local usa `MSSQL_PORT_FIXED=14334` (NAT Docker Desktop rancio en 14333; CI usa 14333); fixture duplicado causaba "port allocated" (IClassFixture + ICollectionFixture a la vez); `logs/` añadido a .gitignore; semgrep solo CI.
 - A evitar: `WithDocumentPerVersion`/chained-`AddOpenApi` inexistentes; `MsSqlBuilder()` sin imagen obsoleto en Testcontainers 4; `RequestTimeoutAttribute` defaultea 504 (sonda autodisciplinada a 408); HSTS solo con scheme https (test vía `HstsOptions`).
