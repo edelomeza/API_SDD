@@ -97,3 +97,8 @@
 - Estado: creado `.opencode/agents/readme-keeper.md` (`mode:subagent`, `edit: **/*.md allow/* deny`, `bash:deny`); corre tras `@traceability-clerk`, antes de la firma. Integrado en `AGENTS.md §11` (5.º agente) y tabla `README.md` (+ fila, `scaffolder nv-04+`, `specs/ nv-00…nv-03`, `scripts/ +delta`).
 - Decisión: permiso por patrón (última regla gana) según skill `customize-opencode`; fallback documentado (mandato en cuerpo si la versión no soporta patrones). Porqué: el README estaba huérfano (ningún agente/skill/gate lo tocaba).
 - A evitar: darle `bash` o `edit` plano (rompe el confinamiento); firmarle aprobaciones (no firma, como el clerk).
+
+## Fase .gitignore hardening DevSecOps (2026-10-11)
+- Estado: `.gitignore` 72→117 líneas. Verificado: `check-ignore` cubre `*.binlog/sarif/log/cobertura/lcov/.coverage/.env.local/Local.json/pfx/pem/crt/bin/obj/.vs/.vscode/TestResults/StrykerOutput/logs`; `!.env.example` no ignorado (exit 1, rastreable como plantilla); `launchSettings.json` TRACKED limpio (solo localhost, sin secretos, no se ignora); `critic-guardrails.ps1 → PASS`.
+- Decisión: `packages.lock.json` NO se ignora (NuGetAudit necesita lock rastreado); solo `project.lock.json` legacy. `launchSettings.json` se deja TRACKED genérico con NOTA en `.gitignore` en vez de ignorarlo (ya trackeado, ignorarlo no lo des-trackea y confunde).
+- A evitar: `git add -f` de ignorados sin issue+firma; secretos en `launchSettings.json` (van a `*.Local.json`/env).
