@@ -1,0 +1,66 @@
+# Memoria — API_SDD
+
+> Constitución §10. Por fase/slice: estado, decisiones con porqué, errores a evitar. Máx 10000 líneas. Sin datos sensibles.
+
+## Fase NV-00 — Foundation (2026-10-10)
+- Estado: estructura SDD creada (`.specify/memory/constitution.md` canónico + espejo raíz + templates + specs NV-00..NV-04 + docs vivos).
+- Decisión: canónico en `.specify/memory` estándar Spec-Kit + espejo raíz. Porqué: compatibilidad tooling + visibilidad.
+- Decisión: JSON legacy `prefijos minúsculos + resto PascalCase` medido, no PascalCase puro. Porqué: empírico §2.5.
+- Deuda: `IMemoryCache blacklist:{jti} + attempts 2FA` TTL 120s se pierde al reciclar. Porqué: 1-instancia, diferir Redis.
+- A evitar: fake SHA256 / AnonymousChallenge / token opaco; `CacheService` entidades; `health-ui` / `/metrics` full; workaround sin issue.
+
+## Slice actual
+- Estado: pendiente nv-02 auth real (JWT + Argon2id + TOTP). `nv-01`=Foundation ejecutable, auth es `nv-02` (= NV-03 madre).
+
+## Fase nv-00/nv-01 — Solo 2 specs (2026-10-11)
+- Estado: `specs/` reducido a solo `nv-00/spec.md` + `nv-01/spec.md` verbatim usuario. Eliminados `plan.md/tasks.md` de nv-00/nv-01, 5 legacy `NV-*/spec.md` y `specs/_template.md`.
+- Decisión: estricto pedido usuario. Porqué: planes/tasks van después; legacy no pedido.
+- Deuda: recrear `plan.md/task.md` por spec cuando se pidan; `specs/_template.md` alias roto (canónico sigue en `.specify/templates/spec-template.md`, `AGENTS.md §2` lo cita).
+- A evitar: reintroducir specs no pedidas sin orden.
+
+## Fase nv-00/nv-01 — Planes+tasks integrados (2026-10-11)
+- Estado: integrados `nv-00/plan.md + task.md` y `nv-01/plan.md + task.md` verbatim usuario. `specs/` = 6 archivos.
+- Deuda al crear: `@foundation-builder` (AppSettingsTests 3, middlewares, ping/probe, health/ready, docs/endpoints inicial) — EJECUTADA en fase Fase-1 (abajo).
+
+## Fase Fase-1 ejecutada — nv-00/nv-01 en verde (2026-10-11)
+- Estado: 54/54 tests (Unit 30 + Integration 13 + Security 7 + Database 2 + Contract 2), build 0/0 en 6 proyectos, cobertura 66.32% ≥45%, critic PASS, endpoints OK, sdd-lint OK, semgrep pendiente CI (sin CLI local). Specs a Borrador con evidencia.
+- Decisiones: EF completo ya (DbContext vacío válido, sin entidades); `AssemblyName APISDD` (CA1707 assembly, proyecto sigue `API_SDD/`); `internal` + IVT(UnitTest,SecurityTest) con 11 supresiones por tipo (CA1515/CA1031/CA1032-base/S5332; namespace-scope no aplica en toolchain); `ApiExplorer` fuera (AV0029/AV0030 insatisfacibles en 10.2.1, doc único v1); `TimeoutRejectedException` no existe en ASP.NET → OCE→408; `RollingInterval` vive en `Serilog` root en Sinks.File 7; FA 7.2.2 (evita licencia FA8); `ConfigureAwait(true)` en tests (xUnit1030 vs CA2007); `TestHttp` helper (CA2234); FsCheck vía `Fluent.Gen` + `Property` incompatible con runner v2 (convirtiendo a Fact determinista); `coverlet.runsettings` acota a `[APISDD]*`; `slnx` con 6 proyectos (los `--no-build` corrían rancios); `sdd-lint` + `check_sdd.ps1` + steps critic/endpoints reales en CI.
+- Deuda: Database local usa `MSSQL_PORT_FIXED=14334` (NAT Docker Desktop rancio en 14333; CI usa 14333); fixture duplicado causaba "port allocated" (IClassFixture + ICollectionFixture a la vez); `logs/` añadido a .gitignore; semgrep solo CI.
+- A evitar: `WithDocumentPerVersion`/chained-`AddOpenApi` inexistentes; `MsSqlBuilder()` sin imagen obsoleto en Testcontainers 4; `RequestTimeoutAttribute` defaultea 504 (sonda autodisciplinada a 408); HSTS solo con scheme https (test vía `HstsOptions`).
+
+
+## Fase nv-00/nv-01 — Ajustes inmediatos (2026-10-11)
+- Correcciones: `PascalCase wire → JSON legacy` y `Api/ → API_SDD/` en `nv-01/spec.md:10,13` + `nv-01/plan.md:4`. Base: `constitution.md §4` + `AGENTS.md §1`.
+- Notas: CI vacío acotado vs canónico `ci-pr.yml`; `Database/Contract` con primera entidad (`CONTRACT_CAPTURE=0`).
+- Restaurado `specs/_template.md` alias a `.specify/templates/spec-template.md` (cita `AGENTS.md §2`).
+- Mapa: `nv-02 = auth (NV-03 madre: AdminPolicy + emisión JWT + TOTP)`; `task.md` singular intencional (estándar plural en `.specify/templates/tasks-template.md`).
+- DoD: `CHECKLIST_PR.md + 1 revisor + Memoria.md al día + Borrador con evidencia`; comandos `build --no-restore 0/0`, `check_coverage.py --min 45`; trazabilidad `spec R1-R6 ↔ plan §3 ↔ task T1`.
+
+## Fase sub-agentes — foundation vs CRUD (2026-10-11)
+- Dueños: `nv-00/nv-01 = @foundation-builder` (sin CRUD); `nv-02+ = @slice-scaffolder` (desde auth). `@security-reviewer` con matriz por fase (foundation sin FAIL de auth); `@traceability-clerk` con `task.md` singular + evidencia `3 / 47 tests`.
+- Porqué: specs vigentes prohíben entidades/emisión; scaffolder CRUD puro era inejecutable en foundation.
+- A evitar: correr scaffolder en nv-00/nv-01; exigir emisión/lockout/TOTP en vacío.
+
+## Fase .gitignore DevSecOps (2026-10-11)
+- Estado: creado `.gitignore` raíz. Sin repo git local (`fatal: not a git repository`); patrones validados en repo temporal: 31/31 ignorados + 6/6 tracked.
+- Decisión: `appsettings.json + Development.json` TRACKED genéricos; secretos solo `*.Local.json` + env (`Example.json` plantilla). `*.db/mdf/ldf/ndf/sqlite` ignorados aunque la canónica sea externa.
+- Doble capa: `.gitignore` previene + `critic B1` detecta + `AppSettingsTests 3` verifican. `critic-guardrails.ps1 → PASS`.
+- A evitar: `git add -f` sin issue + firma; `publish/` y `keys/` jamás al repo.
+
+## Fase README.md en inglés (2026-10-11)
+- Estado: creado `README.md` (~200 líneas) con posicionamiento SDD + DevSecOps, tabla stack, componentes SDD, 4 sub-agentes + 35 skills, layout, quickstart, gates, contratos por enlace, seguridad, contributing y deuda.
+- Verificado: secciones SDD/DevSecOps/sub-agentes presentes, sin `Api/` ni `PascalCase wire`, `critic PASS`.
+
+## Fase recorte base + gates reales + git init (2026-10-11)
+- Restricción usuario: solo arquitectura base (sin entidades, sin endpoints de negocio, sin login). Verificado limpio: controllers solo Ping/Probe, `AppDbContext` vacío, grep login/Usuario/DbSet/Argon2/Otp solo nombres de policies en config. Items `nv-02` (spec+implementación+2FA) congelados.
+- Gates reales: `critic-guardrails.ps1` B1(prohibidos+secretos+S1135+CA1707) B2(token en logs) B3(pipeline en orden) B4(controller→fila) con negativo verificado (Local.json → FAIL exit 1); `check_endpoints.ps1` diff bidireccional 10↔10 OK (corregidos parser de sufijos y ruta base fantasma).
+- Git: `init + main`, `.gitignore` filtra bin/obj/.vs/TestResults/coverage/logs (29 entradas, 0 ruido). Primer commit este estado.
+- Higiene: eliminados `Chaos/Performance/MutationTest` (plantillas vacías fuera de CI/slnx); deuda diferida intacta (OTel, hash-chain, Trivy/ZAP, hosting, mutation gate); Docker local 14334 vs CI 14333 documentado.
+- Pendiente: firma `nv-00/nv-01` (falta nombre del revisor); semgrep solo CI (sin CLI local).
+
+## Fase AGENTS — Manual operativo (2026-10-11)
+- Estado: `AGENTS.md` actualizado a versión CrudDevSecOpsMVP (11 secciones + Solution structure adaptada a `API_SDD/`).
+- Decisión: adaptar `Api/` → `API_SDD/API_SDD.csproj`. Porqué: proyecto real es `API_SDD/`, constitución no fija nombre, evita drift.
+- Decisión: crear stubs `API_SDD/appsettings.Example.json`, `scripts/critic-guardrails.ps1 → PASS`, `scripts/check_endpoints.ps1 → OK`, `.semgrep/semgrep.yaml`, `specs/_template.md` alias, `deploy/README.md`. Porqué: AGENTS §4 los exige como gates, pero NV-03/NV-04 aún no los cablean; stubs permiten `Test-Path` verde sin verde falso.
+- Deuda: cablear critic real bloqueantes 1-4, check_endpoints contra `/health/ready`, reglas semgrep propias. `IMemoryCache` TTL 120s sigue vigente.
+- A evitar: hardcodear connection strings/keys; `TokenBlacklist` estático sin `Reset()`; `Invoke-WebRequest` sin `-UseBasicParsing` en PS5.1; TODO sin issue.
