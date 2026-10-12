@@ -34,7 +34,9 @@ internal static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(environment);
 
         services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = null);
-        services.AddOpenApi(o => o.AddDocumentTransformer<ApiVersionDocumentTransformer>());
+        services.AddOpenApi(o => o
+            .AddDocumentTransformer<ApiVersionDocumentTransformer>()
+            .AddDocumentTransformer<SecuritySchemeDocumentTransformer>());
         services.AddHttpContextAccessor();
         services.AddMemoryCache();
         services.AddValidatorsFromAssembly(AssemblyMarker.Value);
@@ -140,6 +142,11 @@ internal static class ServiceCollectionExtensions
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IPasswordHasher, Argon2idPasswordHasher>();
         services.AddScoped<ISDDUsuarioService, SDDUsuarioService>();
+
+        // NV-05: login wiring without touching the pipeline order above.
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
 

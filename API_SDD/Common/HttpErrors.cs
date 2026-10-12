@@ -90,3 +90,22 @@ public sealed class RequestValidationException : HttpErrorException
     {
     }
 }
+
+/// <summary>Credencial inválida → 401 idéntico (anti-enumeración, sin revelar causa).</summary>
+public sealed class UnauthorizedException : HttpErrorException
+{
+    public UnauthorizedException()
+        : this("Invalid credentials.")
+    {
+    }
+
+    public UnauthorizedException(string detail)
+        : base("invalid_credentials", StatusCodes.Status401Unauthorized, detail)
+    {
+    }
+
+    public UnauthorizedException(string message, Exception inner)
+        : base("invalid_credentials", StatusCodes.Status401Unauthorized, message, inner)
+    {
+    }
+}
