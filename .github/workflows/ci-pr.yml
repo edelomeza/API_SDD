@@ -40,7 +40,10 @@ jobs:
         env:
           CONTRACT_CAPTURE: 0
       - name: critic
-        run: powershell -File scripts/critic-guardrails.ps1
+        # NV-03.1: slnx canónico dentro del step critic (mismo step, orden intacto).
+        run: |
+          powershell -File scripts/critic-guardrails.ps1
+          powershell -File scripts/check_slnx.ps1
       - name: endpoints
         run: powershell -File scripts/check_endpoints.ps1
       - name: sdd-lint

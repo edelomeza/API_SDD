@@ -35,7 +35,7 @@ No new libraries without license / maintenance / security evaluation (exception 
 | Specs | `specs/nv-00/`, `specs/nv-01/` (`spec.md` + `plan.md` + `task.md`) | `nv-00` constitution MVP; `nv-01` foundation + pipeline + external DB; next is `nv-02` = auth |
 | Templates | `.specify/templates/` (+ alias `specs/_template.md`) | 7-section spec template + Approval, plan and tasks templates |
 | Living contracts | `docs/endpoints.md`, `docs/rate-limit-matrix.md`, `docs/asvs-l2-checklist.md` | Specs link, never duplicate |
-| Gates | `scripts/critic-guardrails.ps1`, `scripts/check_endpoints.ps1`, `scripts/check_coverage.py`, `.semgrep/semgrep.yaml` | Pre-push quality gates |
+| Gates | `scripts/critic-guardrails.ps1`, `scripts/check_slnx.ps1`, `scripts/check_endpoints.ps1`, `scripts/check_coverage.py`, `.semgrep/semgrep.yaml` | Pre-push quality gates |
 | PR checklist | `CHECKLIST_PR.md` | Mandatory per PR + 1 reviewer |
 | Journal | `Memoria.md` | State, decisions with rationale, lessons per phase (max ~10000 lines, no secrets) |
 
@@ -98,6 +98,7 @@ Docker is for tests only (Testcontainers).
 |---|---|
 | `dotnet test <csproj> -c Release --no-build` (Unit, Integration, Security, Contract, Database) | 100% green suites |
 | `powershell -File scripts/critic-guardrails.ps1` → `PASS` | 4 blocking guardrails (secrets, tokens in logs, pipeline, endpoints) |
+| `powershell -File scripts/check_slnx.ps1` → `PASS` | slnx references only existing projects |
 | `powershell -File scripts/check_endpoints.ps1` → `OK` | Living docs match routes |
 | `python scripts/check_coverage.py --min 45` | Coverage ≥ 45% |
 | `python scripts/check_delta_coverage.py --min 80 --advisory` | Delta vs main ≥ 80% informativo (no bloquea) |

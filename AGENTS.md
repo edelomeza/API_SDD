@@ -38,7 +38,7 @@
 ## 4. Verificación por CRUD
 - `build Release 0/0` antes de test.
 - `Unit/Integration/Security/Contract/Database --no-build` 100% verdes.
-- `critic-guardrails.ps1 → PASS`, `check_endpoints.ps1 → OK`, `check_coverage.py ≥45%`, `check_delta_coverage.py --min 80 --advisory` informa el delta (no bloquea), `semgrep scan --config=auto --config=.semgrep/semgrep.yaml --error` 0 nuevos.
+- `critic-guardrails.ps1 → PASS`, `check_slnx.ps1 → PASS`, `check_endpoints.ps1 → OK`, `check_coverage.py ≥45%`, `check_delta_coverage.py --min 80 --advisory` informa el delta (no bloquea), `semgrep scan --config=auto --config=.semgrep/semgrep.yaml --error` 0 nuevos.
 - `Stryker` PR advisory (`since:main`, `break:0`, `continue-on-error`) + solo nightly opcional; tras él siempre `build` antes de `--no-build`.
 - Contract `CONTRACT_CAPTURE=1` para regenerar, sin var solo valida.
 - `curl /health/ready` 200 con DB externa, 503 si cae.
@@ -90,6 +90,6 @@
 | `DatabaseTest` | `DatabaseTest/` | Testcontainers migraciones/seed |
 | `ContractTest` | `ContractTest/` | captura + convención |
 | `deploy/` | `deploy/` | compose local SQL opcional (futuro, ver `deploy/README.md`) |
-| `scripts/` | `scripts/` | critic, endpoints, coverage, delta |
+| `scripts/` | `scripts/` | critic, slnx, endpoints, coverage, delta |
 | `stryker-config.json` | `./` | Stryker advisory nv-03 (`since:main`, sin break) |
 | `docs/` | `docs/` | endpoints, rate-matrix, asvs |
