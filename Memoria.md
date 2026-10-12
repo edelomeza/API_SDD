@@ -167,3 +167,6 @@
 
 ## Fase skills — 7 actualizados, 0 creados (2026-10-12)
 - Estado: `03-auth-endpoints` (auth nv-04…nv-06, blacklist remanente, TOTP nv-07), `05-cache-redis` (blacklist remanente, lockout DB, attempts nv-07), `deferred-scope-fakes` + `04-totp-provisioning` (TOTP real en nv-07, no desde CRUD1), `02-migrations-seed` (sin seed: bootstrap por token), `03-api-vertical-slice` (slices auth sin entidad + `Unauthorized→401`), `kill-tree` (matar por nombre `APISDD`, suites nunca en paralelo). 28 intactos. Sin skills nuevos: extender antes que proliferar. `critic PASS`.
+
+## Fase PR #5 mergeado — nv-06 firmada (2026-10-12)
+- Estado: PR #5 (`nv-06` → `main`) ✅ mergeado con CI `pass`. Spec nv-06 firmada post-merge (aprobación con merge): `spec.md` + `checklists/gates.md` tildados, tag `v1.0.0-auth6` sobre el merge commit. Rama `nv-06` eliminada local/remoto.
