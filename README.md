@@ -1,7 +1,7 @@
 # API_SDD — Spec-Driven REST API (.NET 10)
 
 > Built with **Spec-Driven Development (SDD)**. Secured with **DevSecOps best practices** from day one.
-> Constitution `v1.0.1` (`.specify/memory/constitution.md`). Approved: `nv-00…nv-03.1`. Executed (Borrador con evidencia): `nv-04` (SDDUsuario CRUD). Draft: `nv-05` (login), `nv-06` (logout).
+> Constitution `v1.0.1` (`.specify/memory/constitution.md`). Approved: `nv-00…nv-05` (`v1.0.0-crud4`, `v1.0.0-auth5`). Executed (Borrador con evidencia): `nv-06` (logout).
 
 ## What this is
 
@@ -17,7 +17,7 @@ AWS, saga / MassTransit / SQS, distributed Redis, full OTel / Prometheus / Grafa
 |---|---|
 | Runtime | .NET 10 / ASP.NET Core 10 |
 | Persistence | EF Core + external SQL Server, migrations |
-| Future auth | JWT HS256 + refresh rotation + TOTP (Otp.NET) + DataProtection |
+| Auth | JWT HS256 login/logout + `blacklist:{jti}` + DataProtection; future: refresh rotation + TOTP (Otp.NET) |
 | Validation | FluentValidation |
 | Tests | xUnit + FluentAssertions + Moq + deterministic FsCheck + WebApplicationFactory + Testcontainers.MsSql (fixed port) |
 | Logs | Serilog JSON rolling + console, secret filter, CorrelationId |
@@ -109,7 +109,7 @@ CI order (`ci-pr.yml`): `restore → build → unit → integration → security
 
 ## API contracts (links, not copies)
 
-* `docs/endpoints.md` — `/health`, `/health/ready`, `auth/login`, `2fa-verify`, generic CRUD + `PagedResult{Items,TotalCount,Page,PageSize}`
+* `docs/endpoints.md` — `/health`, `/health/ready`, `auth/login`, `auth/logout`, generic CRUD + `PagedResult{Items,TotalCount,Page,PageSize}` (2FA en `nv-07`)
 * `docs/rate-limit-matrix.md` — 5 policies (Global 1000/min, Login 5/5min, Login2faVerify 10/5min, Admin 200/min, ConcurrentWrites 10), uniform 429 + `Retry-After`, `UseRateLimiter` before Auth
 * `docs/asvs-l2-checklist.md` — V2–V14 traceable checklist
 
@@ -119,8 +119,8 @@ Conventions: `api/v{version}/[controller]`, strict v1.0 (unversioned → 404), m
 
 * Never secrets in git (critic B1 → FAIL); local secrets live in `*.Local.json` or env, `Example.json` is the public template.
 * JWT HS256 `key ≥ 32B` from env only, `ClockSkew=Zero`, `ValidAlgorithms=[HS256]`, claims `sub/jti/role/2fa_temp`, `OnTokenValidated` anti-blacklist.
-* Argon2id 64MB/3iter (BCrypt verify-only for migration), DB lockout 5→15min fail-closed, identical 401 anti-enumeration, TOTP `Otp.NET ±1` + DataProtection from CRUD1.
-* `blacklist:{jti}` / 2FA attempts in `IMemoryCache` TTL 120s only (single-instance debt); passwords never cached or logged.
+* Argon2id 64MB/3iter (BCrypt verify-only for migration), DB lockout 5→15min fail-closed, identical 401 anti-enumeration; refresh + TOTP arrive in `nv-07`.
+* `blacklist:{jti}` with remaining-life TTL + 2FA attempts with 120s TTL in `IMemoryCache` only (single-instance debt); passwords never cached or logged.
 * Headers outermost + CSP nonce 16B/request + HSTS 365d (non-Dev) + single-origin CORS + Kestrel 10MB/2min + 60s timeout; `DataProtection:KeysPath` outside wwwroot; `Detail` null in prod.
 
 ## Contributing (1 slice = 1 PR)
@@ -132,7 +132,7 @@ Conventions: `api/v{version}/[controller]`, strict v1.0 (unversioned → 404), m
 
 ## Limitations & debt
 
-* `SDDUsuario` CRUD behind minimal `AdminPolicy` (full login/issuance is `nv-05`); TOTP/refresh arrive with `nv-05…nv-07`.
+* Login/logout behind JWT (`nv-05`/`nv-06`); refresh + TOTP arrive in `nv-07`.
 * `IMemoryCache` blacklist is lost on recycle (documented, Redis deferred).
 * Trivy / ZAP / RESTler deferred (documented, not required); Sonar informative, Semgrep blocking; Dependabot on.
 * See `Memoria.md` for the full per-phase log.

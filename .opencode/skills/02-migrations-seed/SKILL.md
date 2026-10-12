@@ -11,8 +11,8 @@ metadata:
 ## What I do
 - `dotnet ef migrations add InitialCreate --project API_SDD`. UNIQUEs filtrados. Migraciones sin `_` (CA1707).
 - `IDesignTimeDbContextFactory` (env primero, sin secretos) + `Microsoft.EntityFrameworkCore.Design` PrivateAssets; migración manuscrita válida si el nombre CLI trae `_`.
-- Seeder: `AnyAsync + IDENTITY_INSERT + 1 transacción + idempotente`. Estados `base/race/perf`.
+- Seeder diferido: sin seed en repo; bootstrap del primer Admin por token auto-firmado (ver `AGENTS.md` §9).
 - `UseInMemoryDatabase=false` default. `ConnectionStrings__Default` por env externa.
 
 ## Verify
-- `dotnet ef database update` contra SQL externa + seed re-ejecutable sin duplicar.
+- `dotnet ef database update` contra SQL externa. Sin seed: el primer Admin se crea por bootstrap operativo.

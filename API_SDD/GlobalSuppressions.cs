@@ -140,6 +140,12 @@ using System.Diagnostics.CodeAnalysis;
     "Maintainability",
     "CA1515:Consider making public types internal",
     Scope = "type",
+    Target = "~T:ApiSDD.Security.ITokenRevocationService",
+    Justification = "Constructor parameter of the public controller; resolved via DI.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
     Target = "~T:ApiSDD.Controllers.V1.AuthController",
     Justification = "MVC discovers only public controllers.")]
 [assembly: SuppressMessage(

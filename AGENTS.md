@@ -49,7 +49,7 @@
 - Health `/health,/health/ready`; `/scalar` solo Dev. Sin `health-ui/metrics` full.
 - Keys IMemory solo `blacklist:{jti}` (TTL = vida remanente, `nv-06`), `attempts:{user},lockout:{user}` 2FA TTL 120s. Password nunca en caché.
 - Migrations: `dotnet ef migrations add --project API_SDD`.
-- Auth `nv-05` da `AdminPolicy`; `nv-04` y demás CRUDs la consumen. 2FA TOTP `Otp.NET ±1 + DataProtection` desde CRUD1.
+- Auth `nv-05` da `AdminPolicy`; `nv-04` y demás CRUDs la consumen. `AuthController` único por slice auth (login+logout); Sonar S6960 suprimido con justificación (`#pragma` por archivo como S101) — dividirlo rompería la convención de rutas que verifica `check_endpoints`. 2FA TOTP `Otp.NET ±1 + DataProtection` llega en `nv-07`.
 - Molde nv-02: `Common/PagedResult<T>` + validators espejo auto-registrados por reflexión (`ValidatorRegistration`, sin paquete DI extra); `Dtos/PaginationQuery` demo sin entidad.
 - Nombres `SDD*` eximidos de Sonar S101 con `#pragma` por archivo (el prefijo lo manda constitución §5).
 - OpenAPI de un solo v1: transformer `v{version}` → `v1` (sin Swagger/ApiExplorer).
@@ -73,7 +73,7 @@
 - Sin OTel/Prometheus/Grafana por ahora.
 
 ## 9. Operación manual — sin hosting aún
-- DB externa: migraciones + seed idempotente + backup documentado fuera de repo.
+- DB externa: migraciones aplicadas por ops + backup documentado fuera de repo (sin seed: bootstrap del primer Admin por token auto-firmado).
 - Publish listo `dotnet publish`, no desplegado. Cuando haya hosting se añade runbook con `env` + `KeysPath` + verificación post-subida.
 - Sin Redis: single-instance documentado. Sin AWS/SQS.
 

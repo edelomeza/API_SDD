@@ -65,4 +65,33 @@ public sealed class AuthContractTests : IClassFixture<ApiFactory>, IAsyncLifetim
         body.Should().NotContain("strPWD");
         body.Should().NotContain(TestDataFactory.Password);
     }
+
+    [Fact]
+    public async Task LogoutReturnsEmpty204()
+    {
+        var admin = _sqlFactory.CreateClient();
+        admin.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", JwtTestHelper.AdminToken());
+        var created = await admin.PostAsJsonAsync(
+            new Uri("/api/v1/sddusuarios", UriKind.Relative),
+            TestDataFactory.NewCreate()).ConfigureAwait(true);
+        created.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var anonymous = _sqlFactory.CreateClient();
+        var login = await anonymous.PostAsJsonAsync(
+            new Uri("/api/v1/auth/login", UriKind.Relative),
+            new LoginRequestDto(TestDataFactory.UserName, TestDataFactory.Password)).ConfigureAwait(true);
+        var payload = await login.Content.ReadAsStringAsync().ConfigureAwait(true);
+        using var doc = JsonDocument.Parse(payload);
+        var token = doc.RootElement.GetProperty("strToken").GetString()
+            ?? throw new InvalidOperationException("Missing token.");
+
+        var bearer = _sqlFactory.CreateClient();
+        bearer.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var logout = await bearer.PostAsync(
+            new Uri("/api/v1/auth/logout", UriKind.Relative), null).ConfigureAwait(true);
+
+        logout.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        (await logout.Content.ReadAsStringAsync().ConfigureAwait(true)).Should().BeEmpty();
+    }
 }

@@ -10,7 +10,7 @@ metadata:
 
 ## What I do
 - Prohibido `SHA256 fake / AnonymousChallenge / token opaco`. Solo `NOTE(real-first)` + `test-aserta-diferido: sin caché/SQS/OTel`.
-- Cada slice usa `JWT real + Argon2id real + TOTP real` desde CRUD1.
+- Cada slice usa `JWT real + Argon2id real` desde `nv-04/nv-05`; TOTP real en `nv-07`.
 
 ## Verify
 - `grep` 0 fakes + tests asertan diferidos (sin CacheService/SQS/OTel).

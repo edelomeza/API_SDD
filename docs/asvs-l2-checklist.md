@@ -3,7 +3,7 @@
 > Constitución §6. Trazable a NV-03.
 
 - [ ] V2 Auth: JWT HS256 `key≥32B env`, `ClockSkew=Zero`, `ValidAlgorithms=[HS256]`, claims `sub/jti/role/2fa_temp`
-- [ ] V2 Auth: refresh rotación + blacklist `{jti}` + `OnTokenValidated`
+- [ ] V2 Auth: refresh rotación (nv-07) + blacklist `{jti}` (nv-06) + `OnTokenValidated`
 - [ ] V2 2FA: TOTP Otp.NET real, attempts IMemoryCache TTL 120s, lockout DB 5→15min fail-closed
 - [ ] V3 Sesión: stateless 1-instancia, sin sesión en proceso
 - [ ] V4 Acceso: denegar por defecto, mínimo privilegio, 403/404 correctos
