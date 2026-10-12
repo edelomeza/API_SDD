@@ -98,8 +98,8 @@
 - Decisión: permiso por patrón (última regla gana) según skill `customize-opencode`; fallback documentado (mandato en cuerpo si la versión no soporta patrones). Porqué: el README estaba huérfano (ningún agente/skill/gate lo tocaba).
 - A evitar: darle `bash` o `edit` plano (rompe el confinamiento); firmarle aprobaciones (no firma, como el clerk).
 
-## Fase nv-03.1 ejecutada — Blindaje slnx canónico (2026-10-11)
-- Estado: `specs/nv-03.1/` (spec+plan+task+checklists/gates, Borrador sin firmar) + `scripts/check_slnx.ps1` (parse `<Project Path>` + `Test-Path`; `SLNX-OK`/`SLNX-FAIL` exit 1) cableado dentro del step `critic` de `ci-pr.yml` (mismo step, orden intacto). Docs alineados: `AGENTS.md §4` + tabla `scripts/`, `README.md` (Gates + Tests & gates).
+## Fase nv-03.1 ejecutada — Blindaje slnx canónico (2026-10-11; firmada 2026-10-12)
+- Estado: `specs/nv-03.1/` (spec+plan+task+checklists/gates, ✅ Aprobada y firmada por Usuario 2026-10-12) + `scripts/check_slnx.ps1` (parse `<Project Path>` + `Test-Path`; `SLNX-OK`/`SLNX-FAIL` exit 1) cableado dentro del step `critic` de `ci-pr.yml` (mismo step, orden intacto). Docs alineados: `AGENTS.md §4` + tabla `scripts/`, `README.md` (Gates + Tests & gates).
 - Decisiones: script separado en vez de `B5` en critic. Porqué: `AGENTS.md §11` fija critic ligero bloqueantes 1-4; tocar B1-B4 cambia su contrato. `checklists/gates.md` incluido aunque el plan inicial listaba 3 docs. Porqué: `check_sdd.ps1` B1 exige `checklists/` por spec (FALLA sin él). `plan.md` cayó 1 vez en `task.md` por path erróneo; reparado antes de verificar.
 - Medido: positivo HEAD 6/6 → `SLNX-OK`; negativo copia temporal con `ChaosTest/ChaosTest.csproj` (diff revertido) → `SLNX-FAIL` exit 1; `sdd-lint SDD-OK + critic PASS + endpoints OK + build slnx 0/0`; suites intactas (sin cambios de código).
 - A evitar: re-añadir suites al `slnx` desde el IDE sin issue+firma (el gate lo bloquea en CI); ignorar `packages.lock.json` (ya fijado en hardening).

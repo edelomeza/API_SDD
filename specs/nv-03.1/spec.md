@@ -28,7 +28,8 @@ Sin superficie nueva. `B1` (sin secretos, `launchSettings.json` TRACKED limpio),
 Sin `publish`, sin tag, sin endpoint. Entrega: 4 documentos en Borrador en `specs/nv-03.1/` + `scripts/check_slnx.ps1` cableado en el step `critic` (T2 ejecutado). Tras Stryker siempre `dotnet build` antes de `--no-build` (no aplica aquí: sin cambios de código).
 
 ## Aprobación
-- [ ] Revisor 1 — fecha:
-- [ ] CHECKLIST_PR.md OK
-- [ ] Sin conflicto con constitución
-- **Estado:** 🚧 Borrador
+- [x] Revisor humano — Usuario (aceptación expresa en sesión)
+- [x] Fecha: 2026-10-12
+- [x] CHECKLIST_PR.md OK
+- [x] Sin conflicto con constitución
+- **Estado:** ✅ Aprobada
