@@ -26,6 +26,7 @@ permission:
 ## Recorte
 Sí:
 - Editar solo `**/*.md`. Verificar orden CI y conteos contra `ci-pr.yml`, `specs/` y `.opencode/agents/`.
+- Frescura: versión constitución citada en `README.md`, rango de `specs/`, conteos de suites/agentes/skills.
 - Enlazar canónicos (`docs/endpoints.md`, `rate-limit-matrix.md`, `asvs-l2-checklist.md`), no duplicar tablas vivas.
 
 No:

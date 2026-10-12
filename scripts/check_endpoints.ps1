@@ -3,6 +3,7 @@
 .SYNOPSIS
   Diff bidireccional rutas código ↔ docs/endpoints.md (constitución §6).
   Código: controllers ([HttpVerb("sub")]) + /health + /ready + openapi/scalar (si existen en Program.cs).
+  Plantillas "{id}" truncadas en "{" (igual que en docs).
   Docs: columna Ruta de la tabla (concreta, sin placeholders).
   Exit 0 OK, exit 1 FAIL. PS5.1-safe (sin &&, con LiteralPath).
 #>
@@ -24,7 +25,10 @@ function Get-CodeRoutes {
     foreach ($m in ([regex]::Matches($text, '\[Http(Get|Post|Put|Delete|Patch)\("([^"]*)"\)'))) {
       $sub = $m.Groups[2].Value
       if ([string]::IsNullOrEmpty($sub)) { continue }
-      $routes += "/$base/$sub"
+      $full = "/$base/$sub"
+      $cut = $full.IndexOf('{')
+      if ($cut -ge 0) { $full = $full.Substring(0, $cut) }
+      $routes += $full
     }
   }
   $program = Get-Content -LiteralPath "API_SDD/Program.cs" -Raw

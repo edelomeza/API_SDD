@@ -63,6 +63,8 @@ Migración EF sin `_` (`CA1707`). `AppDbContext` añade solo `DbSet<SDDUsuario>`
 
 ## Aprobación
 
-- [ ] Revisor 1 — fecha:
-- [ ] CHECKLIST_PR.md OK
-- [ ] Sin conflicto con constitución
+- [x] Revisor humano — Usuario (aceptación expresa en sesión)
+- [x] Fecha: 2026-10-12
+- [x] CHECKLIST_PR.md OK
+- [x] Sin conflicto con constitución
+- **Estado:** ✅ Aprobada

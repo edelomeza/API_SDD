@@ -5,7 +5,7 @@ namespace ApiSDD.Common;
 /// con <c>PropertyNamingPolicy=null</c>.
 /// </summary>
 /// <typeparam name="T">Tipo del item paginado.</typeparam>
-internal sealed record PagedResult<T>(
+public sealed record PagedResult<T>(
     IReadOnlyList<T> Items,
     int TotalCount,
     int Page,

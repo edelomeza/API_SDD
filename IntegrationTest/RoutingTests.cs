@@ -52,4 +52,16 @@ public sealed class RoutingTests : IClassFixture<ApiFactory>
         (await TestHttp.GetAsync(prod, "/scalar/v1").ConfigureAwait(true)).StatusCode
             .Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task OpenApiExposesConcreteV1Paths()
+    {
+        var client = _factory.CreateClient();
+        var response = await TestHttp.GetAsync(client, "/openapi/v1.json").ConfigureAwait(true);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+        body.Should().NotContain("{version}");
+        body.Should().Contain("/api/v1/SDDUsuarios");
+    }
 }

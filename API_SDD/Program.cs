@@ -9,6 +9,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Local-only overrides (git-ignored): opt-in via UseLocalSettings so test
+// hosts never pick up machine secrets (WAF must keep its own settings).
+if (builder.Configuration.GetValue("UseLocalSettings", false))
+{
+    builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+}
+
 // NV-01 R4: Kestrel 10MB / 2min (configurable, spec defaults).
 builder.WebHost.ConfigureKestrel((context, options) =>
 {

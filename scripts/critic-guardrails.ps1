@@ -17,7 +17,7 @@ function Fail([string]$message) {
 }
 
 function Get-SourceFiles([string]$filter) {
-  $skip = @("\\obj\\", "\\bin\\", "\\.git\\", "\\.vs\\", "\\TestResults\\", "\\logs\\")
+  $skip = @("\obj\", "\bin\", "\.git\", "\.vs\", "\TestResults\", "\logs\")
   $all = Get-ChildItem -LiteralPath "." -Recurse -Filter $filter -File -ErrorAction SilentlyContinue
   $out = @()
   foreach ($f in $all) {
@@ -29,7 +29,9 @@ function Get-SourceFiles([string]$filter) {
 }
 
 # B1a: archivos prohibidos presentes en el árbol (aunque estén git-ignored, no deben existir aquí).
-$forbidden = @("appsettings.Local.json", ".env", "secrets.json")
+# appsettings.Local.json NO está prohibido: es el lugar sancionado para secretos locales
+# (git-ignored) y B1b lo exime; aquí solo caen .env/secrets.json no sancionados.
+$forbidden = @(".env", "secrets.json")
 foreach ($name in $forbidden) {
   $hits = Get-ChildItem -LiteralPath "." -Recurse -Filter $name -File -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -notmatch "\\(\.git|obj|bin|\.vs)\\" }
@@ -40,7 +42,9 @@ foreach ($dir in @("keys", "publish")) {
 }
 
 # B1b: valores secretos reales en config/código (placeholders REEMPLAZAR/EXTERNA e Invalid#1 de tests permitidos).
+# Se exime appsettings.Local.json: lugar sancionado y git-ignored para secretos locales.
 foreach ($f in (Get-SourceFiles "*.json")) {
+  if ($f.Name -like "*appsettings.Local.json") { continue }
   $text = Get-Content -LiteralPath $f.FullName -Raw
   if ([string]::IsNullOrEmpty($text)) { continue }
   foreach ($m in ([regex]::Matches($text, '(?i)"(Key|Password|Secret|Token)"\s*:\s*"([^"]+)"'))) {

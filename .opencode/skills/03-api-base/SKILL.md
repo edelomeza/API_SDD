@@ -10,6 +10,7 @@ metadata:
 
 ## What I do
 - `api/v{version}/[controller]` v1.0 estricta, sin versión 404. `PropertyNamingPolicy=null`.
+- OpenAPI doc único v1: transformer `v{version}` → `v1` + retira parámetro `version` (sin Swagger/ApiExplorer).
 - JSON legacy medido `prefijos minúsculos + resto PascalCase + id`, NO PascalCase puro.
 - `docs/endpoints.md` canónico + `check_endpoints.ps1 OK`. Scalar solo Dev.
 

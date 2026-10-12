@@ -27,6 +27,7 @@
 - No InMemory para negocio; solo 1 test dummy `byte[]{1}`.
 - No `TokenBlacklist` estático sin `Reset()`.
 - No hardcodear connection strings/keys.
+- Secretos locales solo en `appsettings.Local.json` (git-ignored) con carga opt-in `UseLocalSettings` + `CopyToOutput Never` en csproj; WAF nunca debe verlos.
 - No Argon2id débil; BCrypt solo migración.
 - No tocar pipeline sin orden §4 constitución.
 - No relajar rate en prod; sin `PERF_*` en este MVP.
@@ -50,6 +51,8 @@
 - Migrations: `dotnet ef migrations add --project API_SDD`.
 - Auth `nv-05` da `AdminPolicy`; `nv-04` y demás CRUDs la consumen. 2FA TOTP `Otp.NET ±1 + DataProtection` desde CRUD1.
 - Molde nv-02: `Common/PagedResult<T>` + validators espejo auto-registrados por reflexión (`ValidatorRegistration`, sin paquete DI extra); `Dtos/PaginationQuery` demo sin entidad.
+- Nombres `SDD*` eximidos de Sonar S101 con `#pragma` por archivo (el prefijo lo manda constitución §5).
+- OpenAPI de un solo v1: transformer `v{version}` → `v1` (sin Swagger/ApiExplorer).
 
 ## 6. Seguridad DevSecOps
 - JWT HS256 real `UseJwtBearer=true` siempre (sin flag legacy), `OnTokenValidated` blacklist.
@@ -61,7 +64,8 @@
 ## 7. Testing quirks
 - `xUnit+FluentAssertions+Moq+FsCheck`; WAF para Integration/Security.
 - `SecurityTest` reuse `UnitTest/Common/TestDataFactory`.
-- `Testcontainers.MsSql` puerto fijo. `NBomber borra reportes` — no aplica aquí, pero separa `reports/` si lo usas futuro.
+- `Testcontainers.MsSql` puerto fijo, suites con contenedor nunca en paralelo local (colisionan). `NBomber borra reportes` — no aplica aquí, pero separa `reports/` si lo usas futuro.
+- Apphost local se mata por nombre `APISDD`, no `dotnet.exe` (`dotnet run` lanza el exe).
 - `Contract IsConventional` legacy, no PascalCase puro.
 
 ## 8. Observabilidad mínima

@@ -24,6 +24,7 @@ permission:
 ## Matriz por fase (no todo aplica siempre)
 - En `nv-00`: solo `Example.json` sin secretos + `S1135/CA1707 + TreatWarningsAsErrors + NuGetAudit` + `critic B1/B2` + `AppSettingsTests 3`. Auth diferido, FAIL de auth aquí es falso positivo.
 - En `nv-01`: pipeline orden + headers/CSP nonce/HSTS + `health/ready` + CORS 1 origen + `KeysPath` + `Kestrel 10MB/2min` + rates configurados (sin usuarios) + `semgrep 0`. Emisión JWT, lockout, TOTP y `AdminPolicy` usada son `nv-04+`; no fallarlos en vacío (`nv-00→nv-03`).
+- En `nv-04+` (primer CRUD con auth real): `AdminPolicy` usada (401 sin token, 403 sin rol) + hash/plano nunca en wire + 429 uniforme con `Retry-After` + algoritmo erróneo → 401 + `MapInboundClaims=false` + BCrypt solo-verify con `NeedsRehash`.
 
 ## Recorte
 Sí — checks 04:

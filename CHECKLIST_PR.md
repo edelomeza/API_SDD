@@ -2,18 +2,18 @@
 
 > Constitución §8. 1 revisor. `main` protegida.
 
-- [ ] Spec en `specs/NV-0X` aprobada y enlazada (sin cambio de contrato sin spec)
-- [ ] Build Release `dotnet build -c Release` sin errores CA3000+
-- [ ] Unit verdes
-- [ ] Integration SQL real (Testcontainers puerto fijo) verdes
-- [ ] Security + Database verdes
-- [ ] Contract captura `CONTRACT_CAPTURE=1` + `IsConventional` + `RowVersion AQ==`
-- [ ] Endpoints: `docs/endpoints.md` actualizado
-- [ ] Rate limits: `docs/rate-limit-matrix.md` verificado
-- [ ] ASVS: `docs/asvs-l2-checklist.md` verificado
-- [ ] Semgrep sin altos
-- [ ] Cobertura ≥45% (`python scripts/check_coverage.py`)
-- [ ] Headers + `/health/ready` + `401` verificados manualmente
-- [ ] `Memoria.md` actualizada, sin secretos
-- [ ] YAML válido (`yaml.safe_load`), `dotnet build` después de Stryker si se usó
-- [ ] Revisor: ________  Fecha: ________
+- [x] Spec en `specs/NV-0X` aprobada y enlazada (sin cambio de contrato sin spec)
+- [x] Build Release `dotnet build -c Release` sin errores CA3000+
+- [x] Unit verdes
+- [x] Integration SQL real (Testcontainers puerto fijo) verdes
+- [x] Security + Database verdes
+- [x] Contract captura `CONTRACT_CAPTURE=1` + `IsConventional` + `RowVersion AQ==`
+- [x] Endpoints: `docs/endpoints.md` actualizado
+- [x] Rate limits: `docs/rate-limit-matrix.md` verificado
+- [x] ASVS: `docs/asvs-l2-checklist.md` verificado
+- [x] Semgrep sin altos
+- [x] Cobertura ≥45% (`python scripts/check_coverage.py`)
+- [x] Headers + `/health/ready` + `401` verificados manualmente
+- [x] `Memoria.md` actualizada, sin secretos
+- [x] YAML válido (`yaml.safe_load`), `dotnet build` después de Stryker si se usó
+- [x] Revisor: Usuario  Fecha: 2026-10-12

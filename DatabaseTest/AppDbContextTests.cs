@@ -1,5 +1,6 @@
 using System.Net;
 using ApiSDD.Data;
+using ApiSDD.Data.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,13 +22,13 @@ public sealed class AppDbContextTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public void ModeloVacioProveedorSqlServer()
+    public void ModeloRegistraSDDUsuario()
     {
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         db.Database.ProviderName.Should().Be("Microsoft.EntityFrameworkCore.SqlServer");
-        db.Model.GetEntityTypes().Should().BeEmpty();
+        db.Model.FindEntityType(typeof(SDDUsuario)).Should().NotBeNull();
     }
 
     [Fact]

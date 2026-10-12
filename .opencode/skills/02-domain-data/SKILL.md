@@ -10,6 +10,7 @@ metadata:
 
 ## What I do
 - Tablas `Prefijo* + str/int/dec/dte/bln + IConcurrenteAuditable RowVersion IsRowVersion() + decimal(18,2)`.
+- Nombres `SDD*` eximidos de Sonar S101 con `#pragma` por archivo (el prefijo es convención, no casing).
 - `DbContext` lee `IConfiguration` lazy en factory, compatible WAF. Sin `byte[]{1}` salvo dummy.
 - Sin connection string hardcodeada. Inglés en código.
 

@@ -10,6 +10,7 @@ metadata:
 
 ## What I do
 - Canónicos `endpoints.md, rate-limit-matrix.md, asvs-l2-checklist.md`. `check_endpoints.ps1` bloqueante. No duplicar tablas en specs.
+- Extractores truncan plantillas `{id}`/`{version}` igual en código y docs (si no, el diff bidireccional es imposible).
 - `traceability-clerk` reporta drift, no edita.
 
 ## Verify
