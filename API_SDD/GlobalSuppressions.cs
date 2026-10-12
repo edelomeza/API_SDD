@@ -80,7 +80,19 @@ using System.Diagnostics.CodeAnalysis;
     "Maintainability",
     "CA1515:Consider making public types internal",
     Scope = "type",
+    Target = "~T:ApiSDD.Data.Entities.SDDSegBloqueo",
+    Justification = "Exposed via public DbSet for EF + lockout persistence; 1-instance stateless via SQL.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
     Target = "~T:ApiSDD.Data.Migrations.AddInitialSDDUsuario",
+    Justification = "EF discovers public migrations at Migrate() time.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
+    Target = "~T:ApiSDD.Data.Migrations.AddSegBloqueo",
     Justification = "EF discovers public migrations at Migrate() time.")]
 [assembly: SuppressMessage(
     "Maintainability",
@@ -110,6 +122,36 @@ using System.Diagnostics.CodeAnalysis;
     "Maintainability",
     "CA1515:Consider making public types internal",
     Scope = "type",
+    Target = "~T:ApiSDD.Dtos.LoginRequestDto",
+    Justification = "Public controller signature + OpenAPI schema; plain secret at boundary only.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
+    Target = "~T:ApiSDD.Dtos.LoginResponseDto",
+    Justification = "Public controller signature + OpenAPI schema; carries only the issued token.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
+    Target = "~T:ApiSDD.Services.IAuthService",
+    Justification = "Constructor parameter of the public controller; resolved via DI.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
+    Target = "~T:ApiSDD.Controllers.V1.AuthController",
+    Justification = "MVC discovers only public controllers.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
+    Target = "~T:ApiSDD.Common.UnauthorizedException",
+    Justification = "Public mapped exception, constructed by the login slice.")]
+[assembly: SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Scope = "type",
     Target = "~T:ApiSDD.Services.ISDDUsuarioService",
     Justification = "Constructor parameter of the public controller; resolved via DI.")]
 [assembly: SuppressMessage(
@@ -135,6 +177,12 @@ using System.Diagnostics.CodeAnalysis;
     "CA1819:Properties should not return arrays",
     Scope = "member",
     Target = "~P:ApiSDD.Data.Entities.SDDUsuario.RowVersion",
+    Justification = "EF IsRowVersion concurrency tokens require byte[].")]
+[assembly: SuppressMessage(
+    "Performance",
+    "CA1819:Properties should not return arrays",
+    Scope = "member",
+    Target = "~P:ApiSDD.Data.Entities.SDDSegBloqueo.RowVersion",
     Justification = "EF IsRowVersion concurrency tokens require byte[].")]
 [assembly: SuppressMessage(
     "Globalization",

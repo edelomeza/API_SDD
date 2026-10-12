@@ -18,6 +18,7 @@
 | GET | `/api/v1/sddusuarios?page=&pageSize=` | JWT AdminPolicy | Admin | 200/401/403/422/429 | nv-04 |
 | GET | `/api/v1/sddusuarios/{id}` | JWT AdminPolicy | Admin | 200/401/403/404/429 | nv-04 |
 | DELETE | `/api/v1/sddusuarios/{id}?rowVersion={base64}` | JWT AdminPolicy | Admin + ConcurrentWrites | 204/400/401/403/404/409/429 | nv-04 |
+| POST | `/api/v1/auth/login` | no | Login + Global | 200/400/401/422/429 | nv-05 |
 | GET | `/openapi/v1.json` (solo Dev) | no | — | 200/404 | nv-01 |
 | GET | `/scalar/v1` (solo Dev) | no | — | 200/404 | nv-01 |
 

@@ -27,6 +27,7 @@ public sealed class ErrorMappingTests
 
     [Theory]
     [InlineData(typeof(NotFoundException), 404, "not_found")]
+    [InlineData(typeof(UnauthorizedException), 401, "invalid_credentials")]
     [InlineData(typeof(ForbiddenException), 403, "forbidden")]
     [InlineData(typeof(ConflictException), 409, "conflict")]
     [InlineData(typeof(RequestValidationException), 422, "validation")]

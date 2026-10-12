@@ -64,4 +64,17 @@ public sealed class RoutingTests : IClassFixture<ApiFactory>
         body.Should().NotContain("{version}");
         body.Should().Contain("/api/v1/SDDUsuarios");
     }
+
+    [Fact]
+    public async Task OpenApiDeclaresBearerScheme()
+    {
+        var client = _factory.CreateClient();
+        var response = await TestHttp.GetAsync(client, "/openapi/v1.json").ConfigureAwait(true);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+        body.Should().Contain("securitySchemes");
+        body.Should().Contain("Bearer");
+        body.Should().Contain("bearerFormat");
+    }
 }
