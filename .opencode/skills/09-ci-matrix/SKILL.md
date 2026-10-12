@@ -10,6 +10,7 @@ metadata:
 
 ## Incluye
 - `restore→build→unit→integration→security→database→contract→critic→endpoints→sdd→coverage-merge→coverage→delta-check→stryker→semgrep, timeouts 5/15/30min, --no-build`.
+- Runner `ubuntu-latest` (Testcontainers SQL exige contenedores Linux) + scripts vía `pwsh -File` (PS5.1-safe = portable).
 
 ## Excluye
 - Stryker bloqueante, perf/chaos, deploy AWS. (Stryker corre PR-advisory `since:main` + nightly.)

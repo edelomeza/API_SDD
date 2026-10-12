@@ -7,7 +7,7 @@
 > Stack: ver `constitution.md §3`. Nada fuera sin excepción documentada.
 - Setup: `API_SDD/appsettings.Example.json → API_SDD/appsettings.json`; `ConnectionStrings__Default` apunta a **DB externa**; `UseInMemoryDatabase=false`; `dotnet restore`; Docker solo para tests.
 - Comandos: `dotnet restore`, `dotnet build -c Release --no-restore`, `dotnet test <csproj> -c Release --no-build` (Unit, Integration, Security, Contract, Database), `dotnet run --project API_SDD/API_SDD.csproj`, `dotnet publish -c Release -o ./publish`.
-- CI `ci-pr.yml`: restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage → delta-check → stryker → semgrep. Sin deploy.
+- CI `ci-pr.yml` (ubuntu-latest, Testcontainers exige Linux): restore → build → unit → integration → security → database → contract → critic → endpoints → sdd → coverage → delta-check → stryker → semgrep. Sin deploy.
 - PR = 1 slice CRUD; `CHECKLIST_PR.md` + 1 revisor + `Memoria.md` al día.
 - Naming: inglés código; DB `Prefijo* + str/int/dec/dte/bln`; JSON legacy medido, NO PascalCase puro.
 - Sin secretos, sin TODO sin issue, sin usings muertos, sin código muerto.
