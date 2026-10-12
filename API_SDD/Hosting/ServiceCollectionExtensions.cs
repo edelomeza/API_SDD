@@ -3,6 +3,9 @@ using System.Text;
 using ApiSDD.Common;
 using ApiSDD.Data;
 using ApiSDD.Health;
+using ApiSDD.OpenApi;
+using ApiSDD.Security;
+using ApiSDD.Services;
 using ApiSDD.Validators;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,7 +34,7 @@ internal static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(environment);
 
         services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = null);
-        services.AddOpenApi();
+        services.AddOpenApi(o => o.AddDocumentTransformer<ApiVersionDocumentTransformer>());
         services.AddHttpContextAccessor();
         services.AddMemoryCache();
         services.AddValidatorsFromAssembly(AssemblyMarker.Value);
@@ -129,6 +132,15 @@ internal static class ServiceCollectionExtensions
             o.Preload = true;
         });
 
+        // NV-04: slice wiring without touching the pipeline order above.
+        // AdminPolicy is owned by nv-05 (login); nv-04 ships the minimal role gate.
+        services.AddAuthorization(o => o.AddPolicy(
+            "AdminPolicy",
+            p => p.RequireAuthenticatedUser().RequireRole("Admin")));
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<IPasswordHasher, Argon2idPasswordHasher>();
+        services.AddScoped<ISDDUsuarioService, SDDUsuarioService>();
+
         return services;
 
         static void AddJwt(IServiceCollection services, IConfiguration configuration)
@@ -148,6 +160,8 @@ internal static class ServiceCollectionExtensions
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
                 {
+                    // Keep wire claim names (sub/jti/role): no WS-Federation remapping.
+                    o.MapInboundClaims = false;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,

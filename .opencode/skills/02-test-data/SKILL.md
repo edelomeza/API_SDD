@@ -10,6 +10,7 @@ metadata:
 
 ## What I do
 - Builders deterministas + IDs seed. `POST /provider-states {state} → 200/400` gateado `EnableProviderStates+no-prod`.
+- WAF nunca ve secretos de máquina (`UseLocalSettings` opt-in); suites con contenedor nunca en paralelo local (puerto fijo).
 - Tests siempre `Testcontainers.MsSql` puerto fijo, nunca InMemory negocio.
 - `SecurityTest` reuse `UnitTest/Common/TestDataFactory`.
 

@@ -27,6 +27,7 @@ Sí:
 - Variante base entidad→DTO→validator→service→controller→tests + test que aserta cada diferido.
 - `dotnet build -c Release --no-restore` 0/0 antes de test; suites `Unit/Integration/Security/Contract/Database --no-build` + `critic + endpoints + coverage ≥45%` + puerta advisory nv-03 (`delta-check` informativo, Stryker `since:main` sin break).
 - Rutas `api/v{version}/[controller]`, DTOs + FluentValidation (validators espejo vía `ValidatorRegistration` existente), `RowVersion base64` en Update/Delete, `PagedResult<T>` (ya en `Common/`).
+- Nombres `SDD*` con `#pragma S101` por archivo; `MapInboundClaims=false` para preservar `sub/jti/role`; `AdminPolicy` mínima si `nv-05` aún no existe; servicio verificado con SQL real (sin mocks de `DbContext`); `DateTime` con `RoundtripKind`; `?? throw`/`Assert.NotNull` en vez de `!` (S8969); transformer OpenAPI `v{version}` → `v1`; migración manuscrita sin `_` si el CLI genera `_`.
 - Pipeline §4 constitución: `SecurityHeaders outermost → ExceptionHandling → ForwardedHeaders → HSTS no-Dev → HttpsRedirection → CORS 1 origen → UseRateLimiter antes Auth → Auth → AuthZ → Controllers`.
 - Proyecto real `API_SDD/API_SDD.csproj`; migraciones `dotnet ef migrations add --project API_SDD` sin `_` (CA1707).
 

@@ -10,6 +10,7 @@ metadata:
 
 ## What I do
 - `dotnet ef migrations add InitialCreate --project API_SDD`. UNIQUEs filtrados. Migraciones sin `_` (CA1707).
+- `IDesignTimeDbContextFactory` (env primero, sin secretos) + `Microsoft.EntityFrameworkCore.Design` PrivateAssets; migración manuscrita válida si el nombre CLI trae `_`.
 - Seeder: `AnyAsync + IDENTITY_INSERT + 1 transacción + idempotente`. Estados `base/race/perf`.
 - `UseInMemoryDatabase=false` default. `ConnectionStrings__Default` por env externa.
 

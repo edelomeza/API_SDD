@@ -1,7 +1,7 @@
 # API_SDD — Spec-Driven REST API (.NET 10)
 
 > Built with **Spec-Driven Development (SDD)**. Secured with **DevSecOps best practices** from day one.
-> Constitution `v1.0.0` (`.specify/memory/constitution.md`). Active specs: `nv-00` + `nv-01` (both Draft).
+> Constitution `v1.0.1` (`.specify/memory/constitution.md`). Approved: `nv-00…nv-03.1`. Executed (Borrador con evidencia): `nv-04` (SDDUsuario CRUD). Draft: `nv-05` (login), `nv-06` (logout).
 
 ## What this is
 
@@ -32,7 +32,7 @@ No new libraries without license / maintenance / security evaluation (exception 
 |---|---|---|
 | Constitution (source of truth) | `.specify/memory/constitution.md` (+ mirror `./constitution.md`) | Non-negotiables; wins on conflict |
 | How-to manual | `AGENTS.md` | Operating manual (11 sections + solution structure) |
-| Specs | `specs/nv-00/`, `specs/nv-01/` (`spec.md` + `plan.md` + `task.md`) | `nv-00` constitution MVP; `nv-01` foundation + pipeline + external DB; next is `nv-02` = auth |
+| Specs | `specs/nv-00/` … `specs/nv-06/` (`spec.md` + `plan.md` + `task.md`) | `nv-00` constitution; `nv-01` foundation; `nv-02` mold; `nv-03` quality gate; `nv-03.1` slnx; `nv-04` SDDUsuario CRUD; `nv-05` login; `nv-06` logout |
 | Templates | `.specify/templates/` (+ alias `specs/_template.md`) | 7-section spec template + Approval, plan and tasks templates |
 | Living contracts | `docs/endpoints.md`, `docs/rate-limit-matrix.md`, `docs/asvs-l2-checklist.md` | Specs link, never duplicate |
 | Gates | `scripts/critic-guardrails.ps1`, `scripts/check_slnx.ps1`, `scripts/check_endpoints.ps1`, `scripts/check_coverage.py`, `.semgrep/semgrep.yaml` | Pre-push quality gates |
@@ -60,7 +60,7 @@ IntegrationTest/    WAF + Testcontainers
 SecurityTest/       WAF
 DatabaseTest/       Testcontainers migrations/seed
 ContractTest/       capture + convention (Fixtures)
-specs/              nv-00…nv-03 (spec/plan/task + checklists)
+specs/              nv-00…nv-06 + nv-03.1 (spec/plan/task + checklists)
 docs/               endpoints, rate-matrix, asvs (living)
 scripts/            critic, endpoints, coverage, delta
 deploy/             optional local SQL compose (future)
@@ -132,7 +132,7 @@ Conventions: `api/v{version}/[controller]`, strict v1.0 (unversioned → 404), m
 
 ## Limitations & debt
 
-* No entities, no used `AdminPolicy`, no JWT issuance yet — issuance is `nv-02`.
+* `SDDUsuario` CRUD behind minimal `AdminPolicy` (full login/issuance is `nv-05`); TOTP/refresh arrive with `nv-05…nv-07`.
 * `IMemoryCache` blacklist is lost on recycle (documented, Redis deferred).
 * Trivy / ZAP / RESTler deferred (documented, not required); Sonar informative, Semgrep blocking; Dependabot on.
 * See `Memoria.md` for the full per-phase log.

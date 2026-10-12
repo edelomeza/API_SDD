@@ -6,7 +6,8 @@ on:
 
 jobs:
   pr:
-    runs-on: windows-latest
+    # Testcontainers SQL exige contenedores Linux: windows-latest no sirve.
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,12 +43,12 @@ jobs:
       - name: critic
         # NV-03.1: slnx canónico dentro del step critic (mismo step, orden intacto).
         run: |
-          powershell -File scripts/critic-guardrails.ps1
-          powershell -File scripts/check_slnx.ps1
+          pwsh -File scripts/critic-guardrails.ps1
+          pwsh -File scripts/check_slnx.ps1
       - name: endpoints
-        run: powershell -File scripts/check_endpoints.ps1
+        run: pwsh -File scripts/check_endpoints.ps1
       - name: sdd-lint
-        run: powershell -File scripts/check_sdd.ps1
+        run: pwsh -File scripts/check_sdd.ps1
       - name: coverage-merge
         shell: pwsh
         run: |
