@@ -53,6 +53,8 @@ Sin tabla nueva de usuarios. Reutiliza `SDDUsuario` + 2 ajustes (migraciones sin
 
 ## Aprobación
 
-- [ ] Revisor 1 — fecha:
-- [ ] CHECKLIST_PR.md OK
-- [ ] Sin conflicto con constitución
+- [x] Revisor humano — Usuario (aceptación con merge PR #3)
+- [x] Fecha: 2026-10-12
+- [x] CHECKLIST_PR.md OK
+- [x] Sin conflicto con constitución
+- **Estado:** ✅ Aprobada
