@@ -148,6 +148,9 @@ internal static class ServiceCollectionExtensions
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
 
+        // NV-06: logout revocation without touching the pipeline order above.
+        services.AddSingleton<ITokenRevocationService, TokenRevocationService>();
+
         return services;
 
         static void AddJwt(IServiceCollection services, IConfiguration configuration)
@@ -185,20 +188,19 @@ internal static class ServiceCollectionExtensions
                     };
                     o.Events = new JwtBearerEvents
                     {
-                        OnTokenValidated = context =>
+                        OnTokenValidated = async context =>
                         {
                             var jti = context.Principal?.FindFirst("jti")?.Value;
                             if (jti is not null)
                             {
-                                var cache = context.HttpContext.RequestServices
-                                    .GetRequiredService<IMemoryCache>();
-                                if (cache.TryGetValue($"blacklist:{jti}", out _))
+                                var revocation = context.HttpContext.RequestServices
+                                    .GetRequiredService<ITokenRevocationService>();
+                                if (await revocation.IsRevokedAsync(jti, context.HttpContext.RequestAborted)
+                                        .ConfigureAwait(false))
                                 {
                                     context.Fail("Token revoked.");
                                 }
                             }
-
-                            return Task.CompletedTask;
                         },
                     };
                 });

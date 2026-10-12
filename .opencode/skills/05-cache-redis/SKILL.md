@@ -9,7 +9,7 @@ metadata:
 # 05-cache-redis MVP (lite)
 
 ## Incluye
-- Prefijos `blacklist:{jti},attempts:,lockout:` TTL 60-120s + nunca password/secret/token.
+- `blacklist:{jti}` TTL = vida remanente + `attempts:` 2FA TTL 60-120s (`nv-07`) + nunca password/secret/token. Lockout en DB (`SDDSegBloqueo`), no en caché.
 
 ## Excluye
 - `cache:{entidad}`, write-through, fallback Redis, `CacheFallbackTests` entidades.
